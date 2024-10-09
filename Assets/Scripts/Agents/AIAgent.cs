@@ -123,6 +123,7 @@ namespace FSMMono
             if (BulletPrefab)
             {
                 GameObject bullet = Instantiate<GameObject>(BulletPrefab, GunTransform.position + transform.forward * 0.5f, Quaternion.identity);
+                bullet.layer = gameObject.layer;
                 Rigidbody rb = bullet.GetComponent<Rigidbody>();
                 rb.AddForce(transform.forward * BulletPower);
             }

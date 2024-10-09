@@ -1,9 +1,9 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.ShaderData;
 
-public class PlayerAgent : MonoBehaviour, IDamageable
+public class PlayerAgent : MonoBehaviour, IDamageable, IBoid
 {
     [SerializeField]
     int MaxHP = 100;
@@ -25,6 +25,10 @@ public class PlayerAgent : MonoBehaviour, IDamageable
     GameObject NPCTargetCursor = null;
     Transform GunTransform;
     bool IsDead = false;
+    [SerializeField]
+    float FiringRate = 0.2f;
+
+    bool IsBetweenFireRate = false;
     int CurrentHP;
 
     private GameObject GetTargetCursor()
@@ -52,14 +56,22 @@ public class PlayerAgent : MonoBehaviour, IDamageable
     public void ShootToPosition(Vector3 pos)
     {
         // instantiate bullet
-        if (BulletPrefab)
+        if (BulletPrefab && !IsBetweenFireRate)
         {
             Vector3 bulletForward = (GetTargetCursor().transform.position - GunTransform.position).normalized;
             bulletForward.y = 0;
+            StartCoroutine(FireRateCoroutine(FiringRate));
             GameObject bullet = Instantiate<GameObject>(BulletPrefab, GunTransform.position + bulletForward * 0.5f, Quaternion.identity);
+            bullet.layer = gameObject.layer;
             Rigidbody rb = bullet.GetComponent<Rigidbody>();
             rb.AddForce(bulletForward * BulletPower);
         }
+    }
+    private IEnumerator FireRateCoroutine(float duration)
+    {
+        IsBetweenFireRate = true;
+        yield return new WaitForSeconds(duration);
+        IsBetweenFireRate = false;
     }
     public void NPCShootToPosition(Vector3 pos)
     {
@@ -104,4 +116,27 @@ public class PlayerAgent : MonoBehaviour, IDamageable
     }
 
     #endregion
+
+    #region IBoid Methods
+    Vector3 IBoid.getVelocity()
+    {
+        return rb.velocity;
+    }
+
+    float IBoid.getMaxVelocity()
+    {
+        return rb.maxLinearVelocity;
+    }
+
+    Vector3 IBoid.getPosition()
+    {
+        return transform.position;
+    }
+
+    float IBoid.getMass()
+    {
+        return rb.mass;
+    }
+    #endregion //IBoid Methods
+
 }
