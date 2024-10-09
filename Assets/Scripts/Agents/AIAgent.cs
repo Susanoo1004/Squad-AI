@@ -35,6 +35,7 @@ namespace FSMMono
 
         public Transform Target;
 
+
         #region MonoBehaviour
 
         private void Awake()
@@ -48,7 +49,7 @@ namespace FSMMono
 
             GunTransform = transform.Find("Body/Gun");
             if (GunTransform == null)
-                Debug.Log("could not fin gun transform");
+                Debug.Log("could not find gun transform");
 
             if (HPSlider != null)
             {

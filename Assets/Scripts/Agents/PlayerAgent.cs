@@ -46,15 +46,19 @@ public class PlayerAgent : MonoBehaviour, IDamageable
         GetTargetCursor().transform.position = pos;
         if (Vector3.Distance(transform.position, pos) > 2.5f)
             transform.LookAt(pos + Vector3.up * transform.position.y);
+
+       // GunTransform.LookAt(pos + Vector3.up * transform.position.y);
     }
     public void ShootToPosition(Vector3 pos)
     {
         // instantiate bullet
         if (BulletPrefab)
         {
-            GameObject bullet = Instantiate<GameObject>(BulletPrefab, GunTransform.position + transform.forward * 0.5f, Quaternion.identity);
+            Vector3 bulletForward = (GetTargetCursor().transform.position - GunTransform.position).normalized;
+            bulletForward.y = 0;
+            GameObject bullet = Instantiate<GameObject>(BulletPrefab, GunTransform.position + bulletForward * 0.5f, Quaternion.identity);
             Rigidbody rb = bullet.GetComponent<Rigidbody>();
-            rb.AddForce(transform.forward * BulletPower);
+            rb.AddForce(bulletForward * BulletPower);
         }
     }
     public void NPCShootToPosition(Vector3 pos)
@@ -86,6 +90,8 @@ public class PlayerAgent : MonoBehaviour, IDamageable
         GunTransform = transform.Find("Gun");
         rb = GetComponent<Rigidbody>();
 
+
+
         if (HPSlider != null)
         {
             HPSlider.maxValue = MaxHP;
@@ -94,9 +100,8 @@ public class PlayerAgent : MonoBehaviour, IDamageable
     }
     void Update()
     {
-        
+
     }
 
     #endregion
-
 }
