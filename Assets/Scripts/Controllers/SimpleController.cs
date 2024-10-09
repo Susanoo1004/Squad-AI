@@ -56,10 +56,10 @@ public class SimpleController : MonoBehaviour
         {
             OnMouseRightClicked(targetPos);
         }
-        else if (Input.GetMouseButton(1))
-        {
-            OnMouseRightHold(targetPos);
-        }
+        //else if (Input.GetMouseButton(1))
+        //{
+        //    OnMouseRightHold(targetPos);
+        //}
     }
 	void FixedUpdate()
     {
