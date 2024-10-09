@@ -50,17 +50,21 @@ public class PlayerAgent : MonoBehaviour, IDamageable
         GetTargetCursor().transform.position = pos;
         if (Vector3.Distance(transform.position, pos) > 2.5f)
             transform.LookAt(pos + Vector3.up * transform.position.y);
+
+       // GunTransform.LookAt(pos + Vector3.up * transform.position.y);
     }
     public void ShootToPosition(Vector3 pos)
     {
         // instantiate bullet
         if (BulletPrefab && !IsBetweenFireRate)
         {
+            Vector3 bulletForward = (GetTargetCursor().transform.position - GunTransform.position).normalized;
+            bulletForward.y = 0;
             StartCoroutine(FireRateCoroutine(FiringRate));
-            GameObject bullet = Instantiate<GameObject>(BulletPrefab, GunTransform.position + transform.forward * 0.5f, Quaternion.identity);
+            GameObject bullet = Instantiate<GameObject>(BulletPrefab, GunTransform.position + bulletForward * 0.5f, Quaternion.identity);
             bullet.layer = gameObject.layer;
             Rigidbody rb = bullet.GetComponent<Rigidbody>();
-            rb.AddForce(transform.forward * BulletPower);
+            rb.AddForce(bulletForward * BulletPower);
         }
     }
     private IEnumerator FireRateCoroutine(float duration)
@@ -98,6 +102,8 @@ public class PlayerAgent : MonoBehaviour, IDamageable
         GunTransform = transform.Find("Gun");
         rb = GetComponent<Rigidbody>();
 
+
+
         if (HPSlider != null)
         {
             HPSlider.maxValue = MaxHP;
@@ -106,7 +112,7 @@ public class PlayerAgent : MonoBehaviour, IDamageable
     }
     void Update()
     {
-        
+
     }
 
     #endregion
