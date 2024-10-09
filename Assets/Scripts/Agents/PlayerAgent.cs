@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using static UnityEditor.ShaderData;
 
-public class PlayerAgent : MonoBehaviour, IDamageable, IBoid
+public class PlayerAgent : MonoBehaviour, IDamageable
 {
     [SerializeField]
     int MaxHP = 100;
@@ -111,26 +111,5 @@ public class PlayerAgent : MonoBehaviour, IDamageable, IBoid
 
     #endregion
 
-    #region IBoid Methods
-    Vector3 IBoid.getVelocity()
-    {
-        return rb.velocity;
-    }
-
-    float IBoid.getMaxVelocity()
-    {
-        return rb.maxLinearVelocity;
-    }
-
-    Vector3 IBoid.getPosition()
-    {
-        return transform.position;
-    }
-
-    float IBoid.getMass()
-    {
-        return rb.mass;
-    }
-    #endregion //IBoid Methods
 
 }

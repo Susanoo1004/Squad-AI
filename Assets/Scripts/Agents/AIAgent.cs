@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEditor.PackageManager;
+using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 
@@ -17,6 +20,7 @@ namespace FSMMono
         [SerializeField]
         Slider HPSlider = null;
 
+
         Transform GunTransform;
         NavMeshAgent NavMeshAgentInst;
         Material MaterialInst;
@@ -33,7 +37,7 @@ namespace FSMMono
         public void SetBlueMaterial() { SetMaterial(Color.blue); }
         public void SetYellowMaterial() { SetMaterial(Color.yellow); }
 
-        public Transform Target;
+        public Vector3 Target;
 
         #region MonoBehaviour
 
@@ -56,11 +60,14 @@ namespace FSMMono
                 HPSlider.value = CurrentHP;
             }
 
-            Target = Transform.FindAnyObjectByType<PlayerAgent>().transform;
 
             //NavMeshAgentInst.updatePosition = false;
         }
 
+        private void Update()
+        {
+            HPSlider.transform.parent.rotation = Quaternion.identity;
+        }
         private void Start()
         {
         }
@@ -94,6 +101,39 @@ namespace FSMMono
         {
             return NavMeshAgentInst.remainingDistance - NavMeshAgentInst.stoppingDistance <= 0f;
         }
+        public void FollowPath(List<Vector3> path)
+        {
+            StartCoroutine(FollowPathCoroutine(path));
+        }
+
+        public IEnumerator FollowPathCoroutine(List<Vector3> path)
+        {
+            int pathId = 0;
+
+            // Loop through the path waypoints
+            while (path.Count > pathId + 1)
+            {
+                // If the current waypoint is null, stop the coroutine
+                if (path[pathId] == null)
+                    yield break;
+
+                // Move towards the next waypoint in the path
+                while ((path[pathId] - transform.position).sqrMagnitude > 10f /* Waypoint Tolerance */)
+                {
+                    // Move the object towards the target position (you can adjust speed as needed)
+                    Target = path[pathId];
+
+                    // Wait for the next frame before continuing the loop
+                    yield return null;
+                }
+
+                // Set the target position to the next waypoint
+                Target = path[pathId];
+
+                // Move to the next waypoint in the path
+                pathId++;
+            }
+    }
 
         #endregion
 
@@ -133,7 +173,7 @@ namespace FSMMono
         public void FixedUpdate()
         {
             // ugly hard coded position next to the player
-            NavMeshAgentInst.SetDestination(Target.position + Vector3.right * 5.0f);
+            NavMeshAgentInst.SetDestination(Target);
         }
         #endregion
     }
