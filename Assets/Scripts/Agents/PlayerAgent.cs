@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,6 +24,10 @@ public class PlayerAgent : MonoBehaviour, IDamageable
     GameObject NPCTargetCursor = null;
     Transform GunTransform;
     bool IsDead = false;
+    [SerializeField]
+    float FiringRate = 0.2f;
+
+    bool IsBetweenFireRate = false;
     int CurrentHP;
 
     private GameObject GetTargetCursor()
@@ -50,12 +53,20 @@ public class PlayerAgent : MonoBehaviour, IDamageable
     public void ShootToPosition(Vector3 pos)
     {
         // instantiate bullet
-        if (BulletPrefab)
+        if (BulletPrefab && !IsBetweenFireRate)
         {
+            StartCoroutine(FireRateCoroutine(FiringRate));
             GameObject bullet = Instantiate<GameObject>(BulletPrefab, GunTransform.position + transform.forward * 0.5f, Quaternion.identity);
+            bullet.layer = gameObject.layer;
             Rigidbody rb = bullet.GetComponent<Rigidbody>();
             rb.AddForce(transform.forward * BulletPower);
         }
+    }
+    private IEnumerator FireRateCoroutine(float duration)
+    {
+        IsBetweenFireRate = true;
+        yield return new WaitForSeconds(duration);
+        IsBetweenFireRate = false;
     }
     public void NPCShootToPosition(Vector3 pos)
     {

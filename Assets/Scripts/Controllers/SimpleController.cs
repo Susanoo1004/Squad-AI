@@ -15,6 +15,8 @@ public class SimpleController : MonoBehaviour
 
     private Action<Vector3> OnMouseLeftClicked;
     private Action<Vector3> OnMouseRightClicked;
+    private Action<Vector3> OnMouseLeftHold;
+    private Action<Vector3> OnMouseRightHold;
 
     void Start ()
     {
@@ -22,6 +24,7 @@ public class SimpleController : MonoBehaviour
 		viewCamera = Camera.main;
 
         OnMouseLeftClicked += Player.ShootToPosition;
+        OnMouseLeftHold += Player.ShootToPosition;
         OnMouseRightClicked += Player.NPCShootToPosition;
     }
     void Update ()
@@ -45,9 +48,17 @@ public class SimpleController : MonoBehaviour
         {
             OnMouseLeftClicked(targetPos);
         }
+        else if (Input.GetMouseButton(0))
+        {
+            OnMouseLeftHold(targetPos);
+        }
         if (Input.GetMouseButtonDown(1))
         {
             OnMouseRightClicked(targetPos);
+        }
+        else if (Input.GetMouseButton(1))
+        {
+            OnMouseRightHold(targetPos);
         }
     }
 	void FixedUpdate()

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,6 +20,7 @@ public class TurretAgent : MonoBehaviour, IDamageable
     Transform GunTransform;
 
     bool IsDead = false;
+    [SerializeField]
     int CurrentHP;
 
     GameObject Target = null;
@@ -43,6 +45,7 @@ public class TurretAgent : MonoBehaviour, IDamageable
         if (BulletPrefab)
         {
             GameObject bullet = Instantiate<GameObject>(BulletPrefab, GunTransform.position + transform.forward * 0.5f, Quaternion.identity);
+            bullet.layer = gameObject.layer;
             Rigidbody rb = bullet.GetComponent<Rigidbody>();
             rb.AddForce(transform.forward * BulletPower);
         }
