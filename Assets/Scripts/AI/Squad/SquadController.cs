@@ -47,7 +47,7 @@ namespace Squad
         GameObject InstantiateAAIAgent()
         {
             GameObject unitInst = Instantiate(AIAgentPrefab, PlayerStart, false);
-            unitInst.transform.parent = null;
+            unitInst.transform.parent = transform;
             AIAgent unit = unitInst.GetComponent<AIAgent>();
             Agents.Add(unitInst.GetComponent<AIAgent>());
 
@@ -78,6 +78,12 @@ namespace Squad
                 Agents[(int)i].Target = TargetWithDistance + Formation.GetOffset(i, cosA, sinA);
         }
 
+
+        public void OrderToShoot(Vector3 newTarget)
+        {
+            foreach (AIAgent agent in Agents)
+                agent.ShootToPosition(newTarget);
+        }
         public void FollowPath(List<Vector3> path)
         {
             foreach (var agent in Agents)

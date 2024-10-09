@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 using System.Collections;
+using Squad;
 
 public class SimpleController : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class SimpleController : MonoBehaviour
     float moveSpeed = 6f;
 
     PlayerAgent Player;
+    [SerializeField]
+    SquadController Allies;
 
 	Camera viewCamera;
 	Vector3 velocity;
@@ -26,6 +29,8 @@ public class SimpleController : MonoBehaviour
         OnMouseLeftClicked += Player.ShootToPosition;
         OnMouseLeftHold += Player.ShootToPosition;
         OnMouseRightClicked += Player.NPCShootToPosition;
+        OnMouseRightClicked += Allies.OrderToShoot ;
+
     }
     void Update ()
     {

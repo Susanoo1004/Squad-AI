@@ -154,7 +154,7 @@ namespace FSMMono
                 HPSlider.value = CurrentHP;
             }
         }
-        void ShootToPosition(Vector3 pos)
+        public void ShootToPosition(Vector3 pos)
         {
             // look at target position
             transform.LookAt(pos + Vector3.up * transform.position.y);
@@ -173,7 +173,6 @@ namespace FSMMono
 
         public void FixedUpdate()
         {
-            // ugly hard coded position next to the player
             NavMeshAgentInst.SetDestination(Target);
         }
         #endregion
