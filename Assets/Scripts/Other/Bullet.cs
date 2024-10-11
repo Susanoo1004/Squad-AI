@@ -9,10 +9,12 @@ public class Bullet : MonoBehaviour
     {
         Destroy(gameObject, Duration);
     }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.layer == gameObject.layer)
             return;
+
         IDamageable damagedAgent = collision.gameObject.GetComponentInParent<IDamageable>();
         if (damagedAgent == null)
             damagedAgent = collision.gameObject.GetComponent<IDamageable>();
@@ -20,4 +22,5 @@ public class Bullet : MonoBehaviour
 
         Destroy(gameObject);
     }
+
 }

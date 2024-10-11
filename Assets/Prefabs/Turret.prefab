@@ -147,13 +147,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 49960626340365858}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fd27cee92cf88eb4cb725b95a7b15eab, type: 3}
+  m_Script: {fileID: 11500000, guid: de98f4b0d21cbcf4b9fc062432752755, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   MaxHP: 100
   BulletPower: 1000
   BulletPrefab: {fileID: 0}
   ShootFrequency: 1
+  CurrentHP: 0
 --- !u!1 &49960627115765623
 GameObject:
   m_ObjectHideFlags: 0
