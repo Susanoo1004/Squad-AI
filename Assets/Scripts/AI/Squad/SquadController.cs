@@ -25,6 +25,7 @@ namespace Squad
         private float DistanceToMove = 5f;
         [SerializeField]
         private float DistanceFromTarget = 2f;
+        Vector3 Barycenter;
         private void Awake()
         {
             if (!SquadLeader)
@@ -41,7 +42,7 @@ namespace Squad
                 GameObject unitInst = InstantiateAAIAgent();
                 unitInst.transform.position += Formation.GetOffset(i);
             }
-            transform.position = ComputeBarycenter();
+            Barycenter = ComputeBarycenter();
         }
 
         GameObject InstantiateAAIAgent()
@@ -69,6 +70,7 @@ namespace Squad
         }
         public void SetTargetPos(Vector3 newTarget)
         {
+            Barycenter = ComputeBarycenter();
             Vector3 direction = SquadLeader.forward;
             float angle = Mathf.Atan2(direction.x, direction.z);
             float cosA = Mathf.Cos(angle);
@@ -95,7 +97,7 @@ namespace Squad
         // Update is called once per frame
         void Update()
         {
-            if (Vector3.SqrMagnitude(transform.position - SquadLeader.position) > DistanceToMove)
+            if (Vector3.SqrMagnitude(Barycenter - SquadLeader.position) > DistanceToMove * DistanceToMove)
                 SetTargetPos(SquadLeader.position);
         }
 
