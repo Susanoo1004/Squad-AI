@@ -1902,7 +1902,7 @@ MonoBehaviour:
   PlayerStart: {fileID: 1875079898}
   Formation: {fileID: 1540582464}
   SquadLeader: {fileID: 0}
-  DistanceToMove: 10
+  DistanceToMove: 3
   DistanceFromTarget: 3
 --- !u!4 &1540582466
 Transform:
@@ -2595,7 +2595,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 6
-  Allies: {fileID: 0}
+  Allies: {fileID: 1540582465}
 --- !u!114 &1875079901
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3236,6 +3236,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6507266271364630450, guid: fbbfa16ea4fee0f4c959cca386e7c165,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9157298027216922154, guid: fbbfa16ea4fee0f4c959cca386e7c165,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
