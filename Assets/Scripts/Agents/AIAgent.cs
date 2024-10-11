@@ -39,12 +39,14 @@ namespace FSMMono
 
         public Vector3 Target;
 
+        public Transform RegisteredEnemy;
 
         #region MonoBehaviour
 
         private void Awake()
         {
             CurrentHP = MaxHP;
+
 
             NavMeshAgentInst = GetComponent<NavMeshAgent>();
 
@@ -98,6 +100,10 @@ namespace FSMMono
             NavMeshAgentInst.isStopped = false;
             NavMeshAgentInst.SetDestination(dest);
         }
+        public void MoveToTarget()
+        {
+            MoveTo(Target);
+        }
         public bool HasReachedPos()
         {
             return NavMeshAgentInst.remainingDistance - NavMeshAgentInst.stoppingDistance <= 0f;
@@ -134,7 +140,7 @@ namespace FSMMono
                 // Move to the next waypoint in the path
                 pathId++;
             }
-    }
+        }
 
         #endregion
 
@@ -156,6 +162,7 @@ namespace FSMMono
         }
         public void ShootToPosition(Vector3 pos)
         {
+            
             // look at target position
             transform.LookAt(pos + Vector3.up * transform.position.y);
 
@@ -167,6 +174,37 @@ namespace FSMMono
                 Rigidbody rb = bullet.GetComponent<Rigidbody>();
                 rb.AddForce(transform.forward * BulletPower);
             }
+            
+            //StartCoroutine(TurnAndShootCoroutine(pos));
+        }
+        IEnumerator TurnAndShootCoroutine(Vector3 pos)
+        {
+            float duration = 1f;
+            float t = 0f;
+            Quaternion angle = transform.rotation;
+            Quaternion targetAngle = Quaternion.LookRotation(pos + Vector3.up * transform.position.y, Vector3.up);
+            // look at target position
+            while (t < duration && !Quaternion.Equals(angle,targetAngle))
+            {
+                yield return new WaitForEndOfFrame();
+                t += Time.deltaTime;
+                angle = Quaternion.Slerp(transform.rotation, targetAngle , t);
+                transform.rotation = angle;
+            }
+            // instantiate bullet
+            if (BulletPrefab)
+            {
+                GameObject bullet = Instantiate<GameObject>(BulletPrefab, GunTransform.position + transform.forward * 0.5f, Quaternion.identity);
+                bullet.layer = gameObject.layer;
+                Rigidbody rb = bullet.GetComponent<Rigidbody>();
+                rb.AddForce(transform.forward * BulletPower);
+            }
+
+        }
+        public void ShootRegisteredEnemy()
+        {
+            if (RegisteredEnemy)
+                ShootToPosition(RegisteredEnemy.position);
         }
 
         Vector3 velocity = Vector3.zero;
