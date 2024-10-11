@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TurretAgent : MonoBehaviour, IDamageable
 {
@@ -22,6 +23,8 @@ public class TurretAgent : MonoBehaviour, IDamageable
     bool IsDead = false;
     [SerializeField]
     int CurrentHP;
+    [SerializeField]
+    Slider HPSlider = null;
 
     GameObject Target = null;
 
@@ -32,8 +35,12 @@ public class TurretAgent : MonoBehaviour, IDamageable
         {
             IsDead = true;
             CurrentHP = 0;
-
             gameObject.SetActive(false);
+        }
+
+        if (HPSlider != null)
+        {
+            HPSlider.value = CurrentHP;
         }
     }
     void ShootToPosition(Vector3 pos)
@@ -52,6 +59,12 @@ public class TurretAgent : MonoBehaviour, IDamageable
     }
     void Start()
     {
+        CurrentHP = MaxHP;
+        if (HPSlider != null)
+        {
+            HPSlider.maxValue = MaxHP;
+            HPSlider.value = CurrentHP;
+        }
         GunTransform = transform.Find("Body/Gun");
         if (GunTransform == null)
             Debug.Log("could not find gun transform");
@@ -66,6 +79,7 @@ public class TurretAgent : MonoBehaviour, IDamageable
             NextShootDate = Time.time + ShootFrequency;
             ShootToPosition(Target.transform.position);
         }
+        HPSlider.transform.parent.rotation = Quaternion.identity;
     }
 
     private void OnTriggerEnter(Collider other)

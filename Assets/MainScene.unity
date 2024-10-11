@@ -2595,6 +2595,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 6
+  Allies: {fileID: 1540582465}
 --- !u!114 &1875079901
 MonoBehaviour:
   m_ObjectHideFlags: 0

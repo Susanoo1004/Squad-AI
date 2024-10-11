@@ -99,9 +99,16 @@ namespace Squad
                 SetTargetPos(SquadLeader.position);
         }
 
+        void FixedUpdate()
+        {
+        }
+
+
+
+
         Vector3 ComputeBarycenter()
         {
-            Vector3 result = new Vector3();
+            Vector3 result = Vector3.zero;
             foreach (AIAgent agent in Agents)
                 result += agent.transform.position;
             result /= Agents.Count;
