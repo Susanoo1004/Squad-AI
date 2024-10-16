@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using TreeEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using static UnityEditor.ShaderData;
+
 
 public class PlayerAgent : MonoBehaviour, IDamageable
 {
@@ -31,6 +33,10 @@ public class PlayerAgent : MonoBehaviour, IDamageable
 
     bool IsBetweenFireRate = false;
     int CurrentHP;
+
+#region Actions
+    public event Action<GameObject> OnDamageTaken;
+#endregion //Actions
 
     private GameObject GetTargetCursor()
     {
@@ -67,6 +73,7 @@ public class PlayerAgent : MonoBehaviour, IDamageable
             bulletForward.y = 0;
             StartCoroutine(FireRateCoroutine(FiringRate));
             GameObject bullet = Instantiate<GameObject>(BulletPrefab, GunTransform.position + bulletForward * 0.5f, Quaternion.identity);
+            (bullet.GetComponent<Bullet>()).SetShooter(gameObject);
             bullet.layer = gameObject.layer;
             Rigidbody rb = bullet.GetComponent<Rigidbody>();
             rb.AddForce(bulletForward * BulletPower);
@@ -85,9 +92,14 @@ public class PlayerAgent : MonoBehaviour, IDamageable
     }
     public void NPCShootToPosition(Vector3 pos)
     {
+        GetNPCTargetCursor().SetActive(true);
         GetNPCTargetCursor().transform.position = pos;
     }
-    public void AddDamage(int amount)
+    public void RemoveNPCTarget()
+    {
+        GetNPCTargetCursor().SetActive(false);
+    }
+    public void AddDamage(int amount, GameObject source)
     {
         CurrentHP -= amount;
         if (CurrentHP <= 0)
@@ -97,6 +109,7 @@ public class PlayerAgent : MonoBehaviour, IDamageable
         }
         if (HPSlider != null)
         {
+            OnDamageTaken?.Invoke(source);
             HPSlider.value = CurrentHP;
         }
     }

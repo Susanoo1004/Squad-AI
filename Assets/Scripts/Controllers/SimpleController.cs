@@ -13,26 +13,32 @@ public class SimpleController : MonoBehaviour
     [SerializeField]
     SquadController Allies;
 
-	Camera viewCamera;
-	Vector3 velocity;
+    Camera viewCamera;
+    Vector3 velocity;
 
-    private Action<Vector3> OnMouseLeftClicked;
-    private Action<Vector3> OnMouseRightClicked;
-    private Action<Vector3> OnMouseLeftHold;
-    private Action<Vector3> OnMouseRightHold;
+    public Action<Vector3> OnMouseLeftClicked;
+    public Action<Vector3> OnMouseRightClicked;
+    public Action<Vector3> OnMouseLeftHold;
+    public Action<Vector3> OnMouseRightHold;
 
-    void Start ()
+    bool IsBarrageMode = false;
+
+    void Start()
     {
         Player = GetComponent<PlayerAgent>();
-		viewCamera = Camera.main;
+        viewCamera = Camera.main;
 
         OnMouseLeftClicked += Player.ShootToPosition;
+        //OnMouseLeftClicked += Allies.OrderToShoot;
         OnMouseLeftHold += Player.ShootToPosition;
-        OnMouseRightClicked += Player.NPCShootToPosition;
-        OnMouseRightClicked += Allies.OrderToShoot ;
+        //OnMouseLeftHold += Allies.OrderToShoot;
+
+
+        //OnMouseRightClicked += Player.NPCShootToPosition;
+        //OnMouseRightClicked += Allies.OrderToShoot ;
 
     }
-    void Update ()
+    void Update()
     {
         int floorLayer = 1 << LayerMask.NameToLayer("Floor");
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -47,7 +53,7 @@ public class SimpleController : MonoBehaviour
             Player.AimAtPosition(targetPos);
         }
 
-        velocity = new Vector3 (Input.GetAxisRaw ("Horizontal"), 0, Input.GetAxisRaw ("Vertical")).normalized * moveSpeed;
+        velocity = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized * moveSpeed;
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -60,14 +66,19 @@ public class SimpleController : MonoBehaviour
         if (Input.GetMouseButtonDown(1))
         {
             OnMouseRightClicked(targetPos);
+            IsBarrageMode = !IsBarrageMode;
+            if (!IsBarrageMode)
+                Player.RemoveNPCTarget();
+            else
+                Player.NPCShootToPosition(targetPos);
         }
         //else if (Input.GetMouseButton(1))
         //{
         //    OnMouseRightHold(targetPos);
         //}
     }
-	void FixedUpdate()
+    void FixedUpdate()
     {
         Player.MoveToward(velocity);
-	}
+    }
 }

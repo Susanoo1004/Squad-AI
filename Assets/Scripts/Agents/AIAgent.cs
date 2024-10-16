@@ -25,6 +25,9 @@ namespace FSMMono
         NavMeshAgent NavMeshAgentInst;
         Material MaterialInst;
 
+        public bool IsRecharging { get; private set; } = false;
+        [SerializeField]
+        float RechargeDuration = 1f;
         bool IsDead = false;
         int CurrentHP;
 
@@ -38,6 +41,7 @@ namespace FSMMono
         public void SetYellowMaterial() { SetMaterial(Color.yellow); }
 
         public Vector3 Target;
+        public Vector3 ShootingTarget;
 
         public Transform RegisteredEnemy;
 
@@ -146,7 +150,7 @@ namespace FSMMono
 
         #region ActionMethods
 
-        public void AddDamage(int amount)
+        public void AddDamage(int amount, GameObject source)
         {
             CurrentHP -= amount;
             if (CurrentHP <= 0)
@@ -167,15 +171,23 @@ namespace FSMMono
             transform.LookAt(pos + Vector3.up * transform.position.y);
 
             // instantiate bullet
-            if (BulletPrefab)
+            if (BulletPrefab && !IsRecharging)
             {
+                StartCoroutine(RechargeCoroutine());
                 GameObject bullet = Instantiate<GameObject>(BulletPrefab, GunTransform.position + transform.forward * 0.5f, Quaternion.identity);
+                (bullet.GetComponent<Bullet>()).SetShooter(gameObject);
                 bullet.layer = gameObject.layer;
                 Rigidbody rb = bullet.GetComponent<Rigidbody>();
                 rb.AddForce(transform.forward * BulletPower);
             }
             
             //StartCoroutine(TurnAndShootCoroutine(pos));
+        }
+        IEnumerator RechargeCoroutine()
+        {
+            IsRecharging = true;
+            yield return new WaitForSeconds(RechargeDuration);
+            IsRecharging = false;
         }
         IEnumerator TurnAndShootCoroutine(Vector3 pos)
         {

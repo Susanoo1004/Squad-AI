@@ -7,16 +7,17 @@ namespace FSM
 
     public class AIAgentFSM : BaseFSM<AIAgentFSM.AIState>
     {
+
         public enum AIState
         {
             IDLE,
             FOLLOW,
             SUPPORT,
-            COVER,
+            BARRAGE,
             PROTECT,
             HEAL
         }
-        protected void Awake()
+        protected new void Awake()
         {
             //base.Awake();
             for (int i = 0; i < transform.childCount; i++)
@@ -26,6 +27,7 @@ namespace FSM
                     States.Add(state.StateKey, state);
             }
             CurrentState = States[AIState.IDLE];
+            
         }
     }
 
