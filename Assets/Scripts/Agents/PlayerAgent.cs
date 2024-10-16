@@ -1,4 +1,5 @@
 using System.Collections;
+using TreeEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using static UnityEditor.ShaderData;
@@ -48,10 +49,14 @@ public class PlayerAgent : MonoBehaviour, IDamageable
     public void AimAtPosition(Vector3 pos)
     {
         GetTargetCursor().transform.position = pos;
-        if (Vector3.Distance(transform.position, pos) > 2.5f)
+        if (Vector3.Distance(transform.position, pos) > 1.5f)
+        {
             transform.LookAt(pos + Vector3.up * transform.position.y);
 
-       // GunTransform.LookAt(pos + Vector3.up * transform.position.y);
+            GunTransform.LookAt(pos + Vector3.up * transform.position.y);
+            GunTransform.Rotate(new Vector3(90, 0, 0));
+        }
+
     }
     public void ShootToPosition(Vector3 pos)
     {
@@ -65,6 +70,11 @@ public class PlayerAgent : MonoBehaviour, IDamageable
             bullet.layer = gameObject.layer;
             Rigidbody rb = bullet.GetComponent<Rigidbody>();
             rb.AddForce(bulletForward * BulletPower);
+
+            /*
+            rb.excludeLayers += bullet.layer;
+            bullet.GetComponent<SphereCollider>().excludeLayers += bullet.layer;
+            */
         }
     }
     private IEnumerator FireRateCoroutine(float duration)

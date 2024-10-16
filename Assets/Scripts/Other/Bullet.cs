@@ -9,13 +9,25 @@ public class Bullet : MonoBehaviour
     {
         Destroy(gameObject, Duration);
     }
-    private void OnCollisionEnter(Collision collision)
+
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.layer == gameObject.layer)
+        if (other.isTrigger)
             return;
-        IDamageable damagedAgent = collision.gameObject.GetComponentInParent<IDamageable>();
+
+        if (other.gameObject.layer == gameObject.layer)
+            return;
+
+        if (other.gameObject.layer == LayerMask.NameToLayer("Wall"))
+        {
+            Debug.Log("wall");
+            Destroy(gameObject);
+            return;
+        }
+
+        IDamageable damagedAgent = other.gameObject.GetComponentInParent<IDamageable>();
         if (damagedAgent == null)
-            damagedAgent = collision.gameObject.GetComponent<IDamageable>();
+            damagedAgent = other.gameObject.GetComponent<IDamageable>();
         damagedAgent?.AddDamage(1);
 
         Destroy(gameObject);
