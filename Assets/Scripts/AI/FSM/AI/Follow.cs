@@ -16,7 +16,6 @@ namespace FSM
         {
             AIAgentFSM.AIState NextState = FOLLOW;
             AIAgent AIAgent;
-            bool IsWaitingNewTarget = false;
             Vector3 oldTarget;
 
             public Follow() : base(FOLLOW)
@@ -28,19 +27,12 @@ namespace FSM
             public override void EnterState()
             {
                 NextState = FOLLOW;
-                IsWaitingNewTarget = true;
-                StartCoroutine(CoroutineNextTargetMove()); 
             }
 
             public override void ExitState()
             {
                 oldTarget = AIAgent.Target;
                 AIAgent.StopMove();
-            }
-            IEnumerator CoroutineNextTargetMove()
-            {
-                yield return new WaitUntil(() => oldTarget != AIAgent.Target);
-                IsWaitingNewTarget = false;
             }
             public override AIAgentFSM.AIState GetNextSate()
             {
@@ -71,7 +63,7 @@ namespace FSM
                 AIAgent.MoveToTarget();
 
 
-                if (!IsWaitingNewTarget && AIAgent.HasReachedPos())
+                if (AIAgent.HasReachedPos())
                 {
                     NextState = IDLE;
                 }

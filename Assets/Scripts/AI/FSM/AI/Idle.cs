@@ -14,13 +14,19 @@ namespace FSM
             AIAgent AIAgent;
             public Idle() : base(IDLE)
             { }
+            bool playerDetected = false;
+
             private void Awake()
             {
                 AIAgent = transform.parent.parent.GetComponent<AIAgent>();
             }
             public override void EnterState()
             {
-                NextState = IDLE;
+                if (playerDetected)
+                    NextState = IDLE;
+                else
+                    NextState = FOLLOW;
+
                 AIAgent.StopMove();
             }
 
@@ -41,12 +47,19 @@ namespace FSM
                     NextState = SUPPORT;
                     AIAgent.RegisteredEnemy = other.gameObject.transform;
                 }
+                if (other.gameObject.tag == "Player")
+                {
+                    playerDetected = true;
+                }
             }
 
             public override void OnTriggerExit(Collider other)
             {
                 if (other.gameObject.tag == "Player")
+                {
+                    playerDetected = false;
                     NextState = FOLLOW;
+                }
             }
 
             public override void OnTriggerStay(Collider other)

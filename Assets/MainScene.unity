@@ -1883,7 +1883,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UnitPerLine: 3
-  Spacing: 1
+  Spacing: 1.5
 --- !u!114 &1540582465
 MonoBehaviour:
   m_ObjectHideFlags: 0

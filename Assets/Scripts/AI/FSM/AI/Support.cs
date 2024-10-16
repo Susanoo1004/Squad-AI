@@ -44,19 +44,18 @@ namespace FSM
 
             public override void OnTriggerExit(Collider other)
             {
-                if (other.gameObject.tag == "Player")
-
-                    NextState = FOLLOW;
-            }
-
-            public override void OnTriggerStay(Collider other)
-            {
                 if (other.gameObject.layer == LayerMask.NameToLayer("Enemies"))
                 {
                     EnemiesInRange--;
                     if (EnemiesInRange == 0)
                         NextState = IDLE;
                 }
+                if (other.gameObject.tag == "Player")
+                    NextState = FOLLOW;
+            }
+
+            public override void OnTriggerStay(Collider other)
+            {
             }
 
             public override void UpdateState()
