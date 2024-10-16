@@ -1,4 +1,5 @@
 using System.Collections;
+using TreeEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using static UnityEditor.ShaderData;
@@ -69,6 +70,11 @@ public class PlayerAgent : MonoBehaviour, IDamageable
             bullet.layer = gameObject.layer;
             Rigidbody rb = bullet.GetComponent<Rigidbody>();
             rb.AddForce(bulletForward * BulletPower);
+
+            /*
+            rb.excludeLayers += bullet.layer;
+            bullet.GetComponent<SphereCollider>().excludeLayers += bullet.layer;
+            */
         }
     }
     private IEnumerator FireRateCoroutine(float duration)

@@ -1883,7 +1883,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UnitPerLine: 3
-  Spacing: 1
+  Spacing: 1.25
 --- !u!114 &1540582465
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1902,8 +1902,8 @@ MonoBehaviour:
   PlayerStart: {fileID: 1875079898}
   Formation: {fileID: 1540582464}
   SquadLeader: {fileID: 0}
-  DistanceToMove: 3
-  DistanceFromTarget: 3
+  DistanceToMove: 4
+  DistanceFromTarget: 4
 --- !u!4 &1540582466
 Transform:
   m_ObjectHideFlags: 0
@@ -2226,7 +2226,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 1
   m_IsActive: 1
 --- !u!65 &1831949516
 BoxCollider:
@@ -2459,6 +2459,7 @@ GameObject:
   - component: {fileID: 1875079899}
   - component: {fileID: 1875079900}
   - component: {fileID: 1875079901}
+  - component: {fileID: 1875079902}
   m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
@@ -2609,7 +2610,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MaxHP: 100
-  BulletPower: 100
+  BulletPower: 25
   BulletPrefab: {fileID: 2180669255350586930, guid: 1539376290df9a54e8404edc666e8d53,
     type: 3}
   TargetCursorPrefab: {fileID: 1510336254582165163, guid: 7b6276c878e17d241921c647a7d9da0e,
@@ -2618,6 +2619,22 @@ MonoBehaviour:
     type: 3}
   HPSlider: {fileID: 1549369261}
   FiringRate: 0.2
+--- !u!208 &1875079902
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1875079894}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 1.25, y: 1, z: 1.25}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &1919374326
 GameObject:
   m_ObjectHideFlags: 0
@@ -2687,7 +2704,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
+  m_ReceiveGI: 2
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -2792,7 +2809,7 @@ GameObject:
   - component: {fileID: 1976609125}
   - component: {fileID: 1976609124}
   - component: {fileID: 1976609128}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Obstacle (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

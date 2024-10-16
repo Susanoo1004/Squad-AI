@@ -152,7 +152,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MaxHP: 100
-  BulletPower: 1000
+  BulletPower: 25
   BulletPrefab: {fileID: 0}
   ShootFrequency: 1
   CurrentHP: 0
