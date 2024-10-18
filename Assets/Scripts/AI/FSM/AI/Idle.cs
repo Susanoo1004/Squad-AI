@@ -1,5 +1,6 @@
 
 using FSMMono;
+using Squad;
 using UnityEngine;
 
 namespace FSM
@@ -12,6 +13,7 @@ namespace FSM
         {
             AIAgentFSM.AIState NextState = IDLE;
             AIAgent AIAgent;
+            SquadController SquadController;
 
             PlayerAgent Player;
             SimpleController Inputs;
@@ -24,24 +26,23 @@ namespace FSM
             {
                 Inputs = FindAnyObjectByType<SimpleController>();
                 AIAgent = transform.parent.parent.GetComponent<AIAgent>();
+                SquadController = AIAgent.transform.parent.GetComponent<SquadController>();
                 Player = FindAnyObjectByType(typeof(PlayerAgent)) as PlayerAgent;
                 #region Events //Can be better
-                Player.OnDamageTaken += HandlePlayerDamaged;
-                Inputs.OnMouseLeftClicked += HandleSupportFireInput;
-                Inputs.OnMouseLeftHold += HandleSupportFireInput;
+                //Player.OnDamageTaken += HandlePlayerDamaged;
+                //Inputs.OnMouseLeftClicked += HandleSupportFireInput;
+                //Inputs.OnMouseLeftHold += HandleSupportFireInput;
                 Inputs.OnMouseRightClicked += HandleBarrageFireInput;
-                Inputs.OnMouseRightHold += HandleBarrageFireInput;
                 #endregion //Events Can be better
             }
 
             private void OnDestroy()
             {
                 #region Events //Can be better
-                Player.OnDamageTaken -= HandlePlayerDamaged;
-                Inputs.OnMouseLeftClicked -= HandleSupportFireInput;
-                Inputs.OnMouseLeftHold -= HandleSupportFireInput;
+                //Player.OnDamageTaken -= HandlePlayerDamaged;
+                //Inputs.OnMouseLeftClicked -= HandleSupportFireInput;
+                //Inputs.OnMouseLeftHold -= HandleSupportFireInput;
                 Inputs.OnMouseRightClicked -= HandleBarrageFireInput;
-                Inputs.OnMouseRightHold -= HandleBarrageFireInput;
                 #endregion //Events Can be better
             }
             public override void EnterState()
@@ -77,6 +78,8 @@ namespace FSM
             }
             void HandleBarrageFireInput(Vector3 target)
             {
+                if (!Inputs.IsBarrageMode) //Important
+                    return;
                 NextState = BARRAGE;
                 AIAgent.ShootingTarget = target;
             }

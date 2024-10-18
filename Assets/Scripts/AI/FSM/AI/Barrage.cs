@@ -22,7 +22,6 @@ namespace FSM
                 AIAgent = transform.parent.parent.GetComponent<AIAgent>();
                 #region Events //Can be better
                 Inputs.OnMouseRightClicked += HandleBarrageFireInput;
-                Inputs.OnMouseRightHold += HandleBarrageFireInput;
                 #endregion //Events Can be better
             }
 
@@ -30,7 +29,6 @@ namespace FSM
             {
                 #region Events //Can be better
                 Inputs.OnMouseRightClicked -= HandleBarrageFireInput;
-                Inputs.OnMouseRightHold -= HandleBarrageFireInput;
             }
             #endregion //Event
             public override void EnterState()
@@ -66,9 +64,10 @@ namespace FSM
                 if (!AIAgent.IsRecharging)
                     AIAgent.ShootToPosition(AIAgent.ShootingTarget);
             }
-            public void HandleBarrageFireInput(Vector3 Target)
+            public void HandleBarrageFireInput(Vector3 target)
             {
-                NextState = IDLE;
+                if (!Inputs.IsBarrageMode) //Safety check, shouldn't be necessary
+                    NextState = IDLE;
             }
         }
     }

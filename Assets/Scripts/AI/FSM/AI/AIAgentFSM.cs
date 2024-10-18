@@ -1,3 +1,4 @@
+using FSMMono;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +8,6 @@ namespace FSM
 
     public class AIAgentFSM : BaseFSM<AIAgentFSM.AIState>
     {
-
         public enum AIState
         {
             IDLE,
@@ -28,6 +28,11 @@ namespace FSM
             }
             CurrentState = States[AIState.IDLE];
             
+        }
+
+        public void ChangeState(AIAgentFSM.AIState nextStateKey)
+        {
+            TransitionToState(nextStateKey);
         }
     }
 

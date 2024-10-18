@@ -21,7 +21,7 @@ public class SimpleController : MonoBehaviour
     public Action<Vector3> OnMouseLeftHold;
     public Action<Vector3> OnMouseRightHold;
 
-    bool IsBarrageMode = false;
+    public bool IsBarrageMode { get; private set; } = false;
 
     void Start()
     {
@@ -65,8 +65,8 @@ public class SimpleController : MonoBehaviour
         }
         if (Input.GetMouseButtonDown(1))
         {
-            OnMouseRightClicked(targetPos);
             IsBarrageMode = !IsBarrageMode;
+            OnMouseRightClicked(targetPos);
             if (!IsBarrageMode)
                 Player.RemoveNPCTarget();
             else

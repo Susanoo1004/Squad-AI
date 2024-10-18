@@ -1492,8 +1492,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.25}
   m_AnchorMax: {x: 1, y: 0.75}
-  m_AnchoredPosition: {x: 2.5, y: 0}
-  m_SizeDelta: {x: -5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: -10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1258572612
 GameObject:
@@ -1882,7 +1882,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93030a798128ef249bf0e250a64ba321, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UnitPerLine: 3
+  UnitPerLine: 5
   Spacing: 1.5
 --- !u!114 &1540582465
 MonoBehaviour:
@@ -1898,12 +1898,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AIAgentPrefab: {fileID: 7698556042702200219, guid: afe0ca0e90dc4e94989f948611cc121a,
     type: 3}
-  numberOfAIAgents: 8
+  numberOfAIAgents: 12
   PlayerStart: {fileID: 1875079898}
   Formation: {fileID: 1540582464}
   SquadLeader: {fileID: 0}
   DistanceToMove: 3
   DistanceFromTarget: 3
+  Protector: {fileID: 0}
 --- !u!4 &1540582466
 Transform:
   m_ObjectHideFlags: 0
@@ -2459,6 +2460,7 @@ GameObject:
   - component: {fileID: 1875079899}
   - component: {fileID: 1875079900}
   - component: {fileID: 1875079901}
+  - component: {fileID: 1875079902}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -2618,6 +2620,22 @@ MonoBehaviour:
     type: 3}
   HPSlider: {fileID: 1549369261}
   FiringRate: 0.2
+--- !u!208 &1875079902
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1875079894}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 1, y: 1, z: 1}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &1919374326
 GameObject:
   m_ObjectHideFlags: 0

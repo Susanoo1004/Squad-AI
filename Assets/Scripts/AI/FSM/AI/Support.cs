@@ -21,7 +21,8 @@ namespace FSM
             public override void EnterState()
             {
                 NextState = IDLE;
-                AIAgent.ShootToPosition(AIAgent.ShootingTarget);
+                AIAgent.IsEnemyAimable(AIAgent.ShootingTarget);
+                    AIAgent.ShootToPosition(AIAgent.ShootingTarget);
             }
 
             public override void ExitState()

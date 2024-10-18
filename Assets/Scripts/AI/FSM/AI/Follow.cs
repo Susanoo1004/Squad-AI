@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using FSMMono;
+using UnityEngine.Windows;
 
 namespace FSM
 {
@@ -15,22 +16,29 @@ namespace FSM
         {
             AIAgentFSM.AIState NextState = FOLLOW;
             AIAgent AIAgent;
-            Vector3 oldTarget;
+            SimpleController Inputs;
 
             public Follow() : base(FOLLOW)
             { }
             private void Awake()
             {
                 AIAgent = transform.parent.parent.GetComponent<AIAgent>();
+                Inputs = FindAnyObjectByType<SimpleController>();
+                Inputs.OnMouseRightClicked += HandleBarrageFireInput;
+            }
+
+            private void OnDestroy()
+            {
+                Inputs.OnMouseRightClicked -= HandleBarrageFireInput;
             }
             public override void EnterState()
             {
-                NextState = FOLLOW;
+                NextState = FOLLOW; 
+                AIAgent.MoveToSquadTarget();
             }
 
             public override void ExitState()
             {
-                oldTarget = AIAgent.Target;
                 AIAgent.StopMove();
             }
             public override AIAgentFSM.AIState GetNextSate()
@@ -50,7 +58,7 @@ namespace FSM
             public override void OnTriggerExit(Collider other)
             {
                 if (other.gameObject.tag == "Player")
-                    NextState = FOLLOW;
+                    NextState = IDLE;
             }
 
             public override void OnTriggerStay(Collider other)
@@ -59,14 +67,18 @@ namespace FSM
 
             public override void UpdateState()
             {
-                AIAgent.MoveToTarget();
-
-
                 if (AIAgent.HasReachedPos())
                 {
                     NextState = IDLE;
                 }
 
+            }
+            void HandleBarrageFireInput(Vector3 target)
+            {
+                if (!Inputs.IsBarrageMode) //Important
+                    return;
+                NextState = BARRAGE;
+                AIAgent.ShootingTarget = target;
             }
         }
     }

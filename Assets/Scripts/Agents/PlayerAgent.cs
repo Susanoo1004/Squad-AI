@@ -6,10 +6,13 @@ using UnityEngine.UI;
 using static UnityEditor.ShaderData;
 
 
-public class PlayerAgent : MonoBehaviour, IDamageable
+public class PlayerAgent : MonoBehaviour, ISquadLeader
 {
     [SerializeField]
     int MaxHP = 100;
+    [SerializeField]
+    int CriticalHP = 20;
+
     [SerializeField]
     float BulletPower = 1000f;
     [SerializeField]
@@ -33,10 +36,16 @@ public class PlayerAgent : MonoBehaviour, IDamageable
 
     bool IsBetweenFireRate = false;
     int CurrentHP;
-
-#region Actions
+    
+    //Actions as set in the interface
     public event Action<GameObject> OnDamageTaken;
-#endregion //Actions
+    public event Action<int> OnCriticalHP;
+    public event Action<Vector3> OnMoving;
+    public event Action<Vector3> OnShooting;
+
+    #region Actions
+
+    #endregion //Actions
 
     private GameObject GetTargetCursor()
     {
@@ -69,6 +78,8 @@ public class PlayerAgent : MonoBehaviour, IDamageable
         // instantiate bullet
         if (BulletPrefab && !IsBetweenFireRate)
         {
+            OnShooting?.Invoke(pos);
+
             Vector3 bulletForward = (GetTargetCursor().transform.position - GunTransform.position).normalized;
             bulletForward.y = 0;
             StartCoroutine(FireRateCoroutine(FiringRate));
@@ -107,6 +118,10 @@ public class PlayerAgent : MonoBehaviour, IDamageable
             IsDead = true;
             CurrentHP = 0;
         }
+        else if (CurrentHP < CriticalHP)
+        {
+            OnCriticalHP?.Invoke(CurrentHP);
+        }
         if (HPSlider != null)
         {
             OnDamageTaken?.Invoke(source);
@@ -115,7 +130,9 @@ public class PlayerAgent : MonoBehaviour, IDamageable
     }
     public void MoveToward(Vector3 velocity)
     {
-        rb.MovePosition(rb.position + velocity * Time.deltaTime);
+        Vector3 arrival = rb.position + velocity * Time.deltaTime;
+        OnMoving?.Invoke(arrival);
+        rb.MovePosition(arrival);
     }
 
     #region MonoBehaviour Methods
