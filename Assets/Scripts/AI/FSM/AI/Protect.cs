@@ -70,17 +70,12 @@ namespace FSM
 
             public override void OnTriggerEnter(Collider other)
             {
-                if (other.gameObject.layer == LayerMask.NameToLayer("Enemies"))
-                {
-                    NextState = SUPPORT;
-                    AIAgent.RegisteredEnemy = other.gameObject.transform;
-                }
             }
 
             public override void OnTriggerExit(Collider other)
             {
                 if (other.gameObject.tag == "Player")
-                    NextState = PROTECT;
+                    NextState = IDLE;
             }
 
             public override void OnTriggerStay(Collider other)
