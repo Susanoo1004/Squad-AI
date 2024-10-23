@@ -165,30 +165,31 @@ namespace Squad
         {
             //TO ADD When Heal State is completed
 
-            //if (Healer != null)
-            //    return;
-            //else
-            //{
-            //    AIAgent bestHealer = null;
-            //    int maxPriority = 0;
-            //    foreach (AIAgent agent in Agents)
-            //    {
-            //        if (Vector3.Distance(agent.transform.position, SquadLeader.position) > 5f /*MinDistanceToHeal*/)
-            //            break;
-            //        // if(maxPriority < agent. /*agent.HealPriority*/)
-            //        //    {
-            //        //    maxPriority = agent. /*agent.HealPriority*/
-            //        bestHealer = agent;
-            //        //    }
-            //    }
+            if (Healer != null)
+                return;
+            else
+            {
+                AIAgent bestHealer = null;
+                int maxPriority = 0;
 
-            //    Healer = bestHealer;
-            //    if (Healer != null)
-            //    {
-            //        ChangeState(Healer, AIAgentFSM.AIState.PROTECT);
-            //        StartCoroutine(EndingStateCoroutine(Healer.gameObject.GetComponentInChildren<AIAgentFSM>(), AIAgentFSM.AIState.HEAL, () => Healer = null));
-            //    }
-            //}
+                foreach (AIAgent agent in Agents)
+                {
+                    if (Vector3.Distance(agent.transform.position, SquadLeader.position) > 5f /*MinDistanceToHeal*/)
+                        break;
+                    //if(maxPriority < agent. /*agent.HealPriority*/)
+                    //{
+                    //   maxPriority = agent. /*agent.HealPriority*/
+                    //}
+                    bestHealer = agent;
+                }
+
+                Healer = bestHealer;
+                if (Healer != null)
+                {
+                    ChangeState(Healer, AIAgentFSM.AIState.HEAL);
+                    StartCoroutine(EndingStateCoroutine(Healer.gameObject.GetComponentInChildren<AIAgentFSM>(), AIAgentFSM.AIState.HEAL, () => Healer = null));
+                }
+            }
         }
         void OrderBarrageFire(Vector3 target)
         {

@@ -437,6 +437,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4386164665440425097}
+  - component: {fileID: 671889484650320436}
   m_Layer: 7
   m_Name: PROTECT
   m_TagString: Untagged
@@ -459,6 +460,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1542159699858675560}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &671889484650320436
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2701753224944073366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8c32c27fbb7b3140b222ba092a145ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Distance: 1
 --- !u!1 &3298841578255656734
 GameObject:
   m_ObjectHideFlags: 0
@@ -587,6 +601,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2302664983963183427}
+  - component: {fileID: 8672565172929802080}
   m_Layer: 7
   m_Name: BARRAGE
   m_TagString: Untagged
@@ -609,6 +624,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1542159699858675560}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8672565172929802080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4779059508492403032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef7ef137b6caeeb4aa3d342b7e47f412, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4784096113856778513
 GameObject:
   m_ObjectHideFlags: 0
@@ -988,8 +1015,12 @@ MonoBehaviour:
   BulletPrefab: {fileID: 2180669255350586930, guid: 1539376290df9a54e8404edc666e8d53,
     type: 3}
   HPSlider: {fileID: 235590534653286784}
-  Target: {x: 0, y: 0, z: 0}
+  RechargeDuration: 1
+  MoveTarget: {x: 0, y: 0, z: 0}
+  SquadTarget: {x: 0, y: 0, z: 0}
+  ShootingTarget: {x: 0, y: 0, z: 0}
   RegisteredEnemy: {fileID: 0}
+  RangeOfSight: 10
 --- !u!195 &5927660559508010837
 NavMeshAgent:
   m_ObjectHideFlags: 0

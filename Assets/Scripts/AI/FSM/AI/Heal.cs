@@ -23,7 +23,7 @@ namespace FSM
 
             private float mHealTimer;
             private float mHealDelay = 0.2f;
-            private float mHealRadius = 1f;
+            private float mHealRadius = 2.5f;
 
             public Heal() : base(HEAL)
             { }
@@ -44,11 +44,12 @@ namespace FSM
             public override void EnterState()
             {
                 NextState = HEAL;
+                AIAgent.GetComponent<Material>().color = Color.green;
             }
 
             public override void ExitState()
             {
-
+                SquadController.Healer = null;
             }
             public override AIAgentFSM.AIState GetNextSate()
             {
@@ -61,7 +62,6 @@ namespace FSM
 
             public override void OnTriggerExit(Collider other)
             {
-
             }
 
             public override void OnTriggerStay(Collider other)
@@ -71,14 +71,14 @@ namespace FSM
             public override void UpdateState()
             {
                 Vector3 v = AIAgent.transform.position - Player.position;
-
                 if (v.magnitude > mHealRadius)
                 {
                     AIAgent.MoveTo(Player.position + v.normalized * mHealRadius * 0.8f);
                 }
                 else
                 {
-                    mHealTimer -= Time.deltaTime;
+                    
+                    mHealTimer -= AIAgentFSM.AIStateUpdateDeltaTime;// UpdateState DeltaTime 
 
                     if (mHealTimer < 0)
                     {

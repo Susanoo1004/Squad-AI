@@ -29,6 +29,8 @@ public class TurretAgent : MonoBehaviour, IDamageable
 
     GameObject Target = null;
 
+    NavMeshAgent NavMeshAgentInst;
+
     public void AddDamage(int amount, GameObject source)
     {
         CurrentHP -= amount;

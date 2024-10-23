@@ -1898,13 +1898,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AIAgentPrefab: {fileID: 7698556042702200219, guid: afe0ca0e90dc4e94989f948611cc121a,
     type: 3}
-  numberOfAIAgents: 12
+  numberOfAIAgents: 4
   PlayerStart: {fileID: 1875079898}
   Formation: {fileID: 1540582464}
   SquadLeader: {fileID: 0}
   DistanceToMove: 3
   DistanceFromTarget: 3
   Protector: {fileID: 0}
+  Healer: {fileID: 0}
 --- !u!4 &1540582466
 Transform:
   m_ObjectHideFlags: 0
@@ -2611,6 +2612,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MaxHP: 100
+  CriticalHP: 20
   BulletPower: 100
   BulletPrefab: {fileID: 2180669255350586930, guid: 1539376290df9a54e8404edc666e8d53,
     type: 3}
