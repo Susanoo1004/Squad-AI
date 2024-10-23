@@ -35,7 +35,7 @@ public class SimpleController : MonoBehaviour
 
 
         //OnMouseRightClicked += Player.NPCShootToPosition;
-        //OnMouseRightClicked += Allies.OrderToShoot ;
+        //OnMouseRightClicked += Allies.OrderToShoot;
 
     }
     void Update()
@@ -68,9 +68,15 @@ public class SimpleController : MonoBehaviour
             IsBarrageMode = !IsBarrageMode;
             OnMouseRightClicked(targetPos);
             if (!IsBarrageMode)
+            {
+
                 Player.RemoveNPCTarget();
+            }
             else
+            { 
                 Player.NPCShootToPosition(targetPos);
+                Allies.OrderToShoot(targetPos);
+            }
         }
         //else if (Input.GetMouseButton(1))
         //{
