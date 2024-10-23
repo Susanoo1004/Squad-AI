@@ -21,8 +21,8 @@ namespace FSM
             //base.Awake();
             for (int i = 0; i < transform.childCount; i++)
             {
-                BaseState<EnemyFSM.EnemyState> state;
-                if (transform.GetChild(i).TryGetComponent<BaseState<EnemyFSM.EnemyState>>(out state))
+                BaseState<EnemyState> state;
+                if (transform.GetChild(i).TryGetComponent(out state))
                     States.Add(state.StateKey, state);
             }
             CurrentState = States[EnemyState.IDLE];

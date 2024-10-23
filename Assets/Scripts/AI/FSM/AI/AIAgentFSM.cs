@@ -23,15 +23,15 @@ namespace FSM
             //base.Awake();
             for (int i = 0; i < transform.childCount; i++)
             {
-                BaseState<AIAgentFSM.AIState> state;
-                if (transform.GetChild(i).TryGetComponent<BaseState<AIAgentFSM.AIState>>(out state))
+                BaseState<AIState> state;
+                if (transform.GetChild(i).TryGetComponent(out state))
                     States.Add(state.StateKey, state);
             }
             CurrentState = States[AIState.IDLE];
             
         }
 
-        public void ChangeState(AIAgentFSM.AIState nextStateKey)
+        public void ChangeState(AIState nextStateKey)
         {
             TransitionToState(nextStateKey);
         }

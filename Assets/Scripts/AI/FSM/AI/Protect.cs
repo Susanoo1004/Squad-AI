@@ -21,7 +21,7 @@ namespace FSM
             Transform Player;
             SimpleController Inputs;
             SquadController SquadController;
-            bool IsPlayeDetected = false;
+            bool IsPlayerDetected = false; //Debug purposes
 
             public Protect() : base(PROTECT)
             { }
@@ -30,37 +30,33 @@ namespace FSM
                 AIAgent = transform.parent.parent.GetComponent<AIAgent>();
                 Player = FindAnyObjectByType<PlayerAgent>().transform;
                 Inputs = FindAnyObjectByType<SimpleController>();
-                Inputs.OnMouseRightClicked += HandleBarrageFireInput;
                 AIAgent.OnDeath += HandleDeath;
             }
             private void Start()
             {
                 SquadController = AIAgent.transform.parent.GetComponent<SquadController>();
-                
-                
             }
             private void OnDestroy()
             {
-                Inputs.OnMouseRightClicked -= HandleBarrageFireInput;
                 AIAgent.OnDeath -= HandleDeath;
             }
             public override void EnterState()
             {
                 Enemy = AIAgent.RegisteredEnemy;
-                if (Enemy == null || (Player.position - Enemy.position).magnitude < Distance)
+                if (Enemy == null || (Player.position - Enemy.position).sqrMagnitude < Distance * Distance)
                 {
                     NextState = IDLE;
                     return;
                 }
                 else
                     NextState = PROTECT;
-                //AddProtector();
+                AddProtector(); //Not necessary, safety purpose
                 AIAgent.MoveTo(Player.position + (Enemy.position - Player.position).normalized * Distance);
             }
 
             public override void ExitState()
             {
-                if (SquadController.Protector == AIAgent)
+                if (SquadController.Protector == AIAgent) //Should always be the case, however safety first
                     RemoveProtector();
 
                 AIAgent.RegisteredEnemy = null;
@@ -74,14 +70,14 @@ namespace FSM
             public override void OnTriggerEnter(Collider other)
             {
                 if (other.gameObject.tag == "Player")
-                    IsPlayeDetected = true;
+                    IsPlayerDetected = true;
             }
 
             public override void OnTriggerExit(Collider other)
             {
                 if (other.gameObject.tag == "Player")
                 {
-                    IsPlayeDetected = false;
+                    IsPlayerDetected = false;
                     NextState = IDLE;
                 }
             }
@@ -107,14 +103,6 @@ namespace FSM
                 {
                     AIAgent.MoveTo(Player.position + (Enemy.position - Player.position).normalized * Distance);
                 }
-            }
-            void HandleBarrageFireInput(Vector3 target)
-            {
-                if (!Inputs.IsBarrageMode) //Important
-                    return;
-                RemoveProtector();
-                NextState = BARRAGE;
-                AIAgent.ShootingTarget = target;
             }
             void AddProtector()
             {

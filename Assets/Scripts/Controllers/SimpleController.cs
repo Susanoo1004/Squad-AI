@@ -81,10 +81,6 @@ public class SimpleController : MonoBehaviour
                 Allies.OrderBarrageFire(targetPos);
             }
         }
-        //else if (Input.GetMouseButton(1))
-        //{
-        //    OnMouseRightHold(targetPos);
-        //}
     }
     void FixedUpdate()
     {
