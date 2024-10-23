@@ -23,7 +23,7 @@ namespace FSM
 
             private float mHealTimer;
             private float mHealDelay = 0.2f;
-            private float mHealRadius = 5f;
+            private float mHealRadius = 1f;
 
             public Heal() : base(HEAL)
             { }
@@ -57,11 +57,6 @@ namespace FSM
 
             public override void OnTriggerEnter(Collider other)
             {
-                if (other.gameObject.layer == LayerMask.NameToLayer("Enemies"))
-                {
-                    NextState = SUPPORT;
-                    AIAgent.RegisteredEnemy = other.gameObject.transform;
-                }
             }
 
             public override void OnTriggerExit(Collider other)
@@ -75,7 +70,24 @@ namespace FSM
 
             public override void UpdateState()
             {
-               if ()
+                Vector3 v = AIAgent.transform.position - Player.position;
+
+                if (v.magnitude > mHealRadius)
+                {
+                    AIAgent.MoveTo(Player.position + v.normalized * mHealRadius * 0.8f);
+                }
+                else
+                {
+                    mHealTimer -= Time.deltaTime;
+
+                    if (mHealTimer < 0)
+                    {
+                        mHealTimer = mHealDelay;
+
+                        if (!Player.GetComponent<PlayerAgent>().Heal(1))
+                            NextState = IDLE;
+                    }
+                }
             }
         }
     }

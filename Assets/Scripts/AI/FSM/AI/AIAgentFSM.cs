@@ -1,3 +1,4 @@
+using FSMMono;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,11 +13,11 @@ namespace FSM
             IDLE,
             FOLLOW,
             SUPPORT,
-            COVER,
+            BARRAGE,
             PROTECT,
             HEAL
         }
-        protected void Awake()
+        protected new void Awake()
         {
             //base.Awake();
             for (int i = 0; i < transform.childCount; i++)
@@ -26,6 +27,12 @@ namespace FSM
                     States.Add(state.StateKey, state);
             }
             CurrentState = States[AIState.IDLE];
+            
+        }
+
+        public void ChangeState(AIAgentFSM.AIState nextStateKey)
+        {
+            TransitionToState(nextStateKey);
         }
     }
 

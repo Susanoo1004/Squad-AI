@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.PackageManager;
 using UnityEngine;
@@ -25,6 +26,9 @@ namespace FSMMono
         NavMeshAgent NavMeshAgentInst;
         Material MaterialInst;
 
+        public bool IsRecharging { get; private set; } = false;
+        [SerializeField]
+        float RechargeDuration = 1f;
         bool IsDead = false;
         int CurrentHP;
 
@@ -37,9 +41,14 @@ namespace FSMMono
         public void SetBlueMaterial() { SetMaterial(Color.blue); }
         public void SetYellowMaterial() { SetMaterial(Color.yellow); }
 
-        public Vector3 Target;
+        public Vector3 MoveTarget;  //Position to move outside of the squad
+        public Vector3 SquadTarget; //Position to move with squad offset
+
+        public Vector3 ShootingTarget;
 
         public Transform RegisteredEnemy;
+        [SerializeField]
+        private float RangeOfSight = 10f;
 
         #region MonoBehaviour
 
@@ -87,6 +96,24 @@ namespace FSMMono
         #endregion
 
         #region Perception methods
+        public bool IsEnemyInSight()
+        {
+            //Test the line of sight
+            Ray ray = new Ray(transform.position, transform.forward);
+            RaycastHit hit;
+
+            // Perform the raycast and check if it hits an enemy
+            return Physics.Raycast(ray, out hit, RangeOfSight, LayerMask.NameToLayer("Enemies") | LayerMask.NameToLayer("Allies") & ~gameObject.layer);
+        }
+        public bool IsEnemyAimable(Vector3 enemyPosition)
+        {
+            //Test the line of sight
+            Ray ray = new Ray(transform.position, (enemyPosition - transform.position).normalized);
+            RaycastHit hit;
+
+            // Perform the raycast and check if it hits an enemy
+            return Physics.Raycast(ray, out hit, RangeOfSight, LayerMask.NameToLayer("Enemies") | LayerMask.NameToLayer("Allies") & ~gameObject.layer);
+        }
 
         #endregion
 
@@ -102,7 +129,11 @@ namespace FSMMono
         }
         public void MoveToTarget()
         {
-            MoveTo(Target);
+            MoveTo(MoveTarget);
+        }
+        public void MoveToSquadTarget()
+        {
+            MoveTo(SquadTarget);
         }
         public bool HasReachedPos()
         {
@@ -128,14 +159,14 @@ namespace FSMMono
                 while ((path[pathId] - transform.position).sqrMagnitude > 10f /* Waypoint Tolerance */)
                 {
                     // Move the object towards the target position (you can adjust speed as needed)
-                    Target = path[pathId];
+                    MoveTarget = path[pathId];
 
                     // Wait for the next frame before continuing the loop
                     yield return null;
                 }
 
                 // Set the target position to the next waypoint
-                Target = path[pathId];
+                MoveTarget = path[pathId];
 
                 // Move to the next waypoint in the path
                 pathId++;
@@ -145,12 +176,14 @@ namespace FSMMono
         #endregion
 
         #region ActionMethods
+        public event Action OnDeath;
 
-        public void AddDamage(int amount)
+        public void AddDamage(int amount, GameObject source)
         {
             CurrentHP -= amount;
             if (CurrentHP <= 0)
             {
+                OnDeath?.Invoke();
                 IsDead = true;
                 CurrentHP = 0;
             }
@@ -162,20 +195,28 @@ namespace FSMMono
         }
         public void ShootToPosition(Vector3 pos)
         {
-            
+
             // look at target position
-            transform.LookAt(pos + Vector3.up * transform.position.y);
 
             // instantiate bullet
-            if (BulletPrefab)
+            if (BulletPrefab && !IsRecharging)
             {
-                GameObject bullet = Instantiate<GameObject>(BulletPrefab, GunTransform.position + transform.forward * 0.5f, Quaternion.identity);
+                transform.LookAt(pos + Vector3.up * transform.position.y);
+                StartCoroutine(RechargeCoroutine());
+                GameObject bullet = Instantiate<GameObject>(BulletPrefab, GunTransform.position + GunTransform.forward * 0.5f, Quaternion.identity);
+                (bullet.GetComponent<Bullet>()).SetShooter(gameObject);
                 bullet.layer = gameObject.layer;
                 Rigidbody rb = bullet.GetComponent<Rigidbody>();
                 rb.AddForce(transform.forward * BulletPower);
             }
-            
+
             //StartCoroutine(TurnAndShootCoroutine(pos));
+        }
+        IEnumerator RechargeCoroutine()
+        {
+            IsRecharging = true;
+            yield return new WaitForSeconds(RechargeDuration);
+            IsRecharging = false;
         }
         IEnumerator TurnAndShootCoroutine(Vector3 pos)
         {
@@ -184,11 +225,11 @@ namespace FSMMono
             Quaternion angle = transform.rotation;
             Quaternion targetAngle = Quaternion.LookRotation(pos + Vector3.up * transform.position.y, Vector3.up);
             // look at target position
-            while (t < duration && !Quaternion.Equals(angle,targetAngle))
+            while (t < duration && !Quaternion.Equals(angle, targetAngle))
             {
                 yield return new WaitForEndOfFrame();
                 t += Time.deltaTime;
-                angle = Quaternion.Slerp(transform.rotation, targetAngle , t);
+                angle = Quaternion.Slerp(transform.rotation, targetAngle, t);
                 transform.rotation = angle;
             }
             // instantiate bullet
@@ -201,17 +242,18 @@ namespace FSMMono
             }
 
         }
+
         public void ShootRegisteredEnemy()
         {
             if (RegisteredEnemy)
-                ShootToPosition(RegisteredEnemy.position);
+                ShootToPosition(RegisteredEnemy.position - Vector3.up * transform.position.y);
         }
 
         Vector3 velocity = Vector3.zero;
 
         public void FixedUpdate()
         {
-            NavMeshAgentInst.SetDestination(Target);
+            //NavMeshAgentInst.SetDestination(MoveTarget);
         }
         #endregion
     }

@@ -8,8 +8,10 @@ namespace FSM
 
     public abstract class BaseFSM<EState> : MonoBehaviour where EState : Enum
     {
-        /*protected*/ public Dictionary<EState, BaseState<EState>> States = new();
-        /*protected*/ public BaseState<EState> CurrentState;
+        [SerializeField]
+        protected Dictionary<EState, BaseState<EState>> States = new();
+        [SerializeField]
+        public BaseState<EState> CurrentState /*{ get; protected set; }*/;
         [SerializeField]
         protected float UpdateDeltaTime = 0.1f;
         private float NextUpdateTime;
@@ -49,7 +51,7 @@ namespace FSM
             }
         }
 
-        private void TransitionToState(EState nextStateKey)
+        public void TransitionToState(EState nextStateKey)
         {
             CurrentState.ExitState();
             CurrentState = States[nextStateKey];

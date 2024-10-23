@@ -29,9 +29,7 @@ public class TurretAgent : MonoBehaviour, IDamageable
 
     GameObject Target = null;
 
-    NavMeshAgent NavMeshAgentInst;
-
-    public void AddDamage(int amount)
+    public void AddDamage(int amount, GameObject source)
     {
         CurrentHP -= amount;
         if (CurrentHP <= 0)
@@ -55,6 +53,7 @@ public class TurretAgent : MonoBehaviour, IDamageable
         if (BulletPrefab)
         {
             GameObject bullet = Instantiate<GameObject>(BulletPrefab, GunTransform.position + transform.forward * 0.5f, Quaternion.identity);
+            (bullet.GetComponent<Bullet>()).SetShooter(gameObject);
             bullet.layer = gameObject.layer;
             Rigidbody rb = bullet.GetComponent<Rigidbody>();
             rb.AddForce(transform.forward * BulletPower);

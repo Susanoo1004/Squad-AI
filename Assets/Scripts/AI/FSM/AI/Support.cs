@@ -12,7 +12,6 @@ namespace FSM
         {
             AIAgentFSM.AIState NextState = SUPPORT;
             AIAgent AIAgent;
-            int EnemiesInRange = 1;
             public Support() : base(SUPPORT)
             { }
             private void Awake()
@@ -21,9 +20,9 @@ namespace FSM
             }
             public override void EnterState()
             {
-                NextState = SUPPORT;
-                AIAgent.StopMove();
-                AIAgent.ShootRegisteredEnemy();
+                NextState = IDLE;
+                AIAgent.IsEnemyAimable(AIAgent.ShootingTarget);
+                    AIAgent.ShootToPosition(AIAgent.ShootingTarget);
             }
 
             public override void ExitState()
@@ -38,25 +37,15 @@ namespace FSM
 
             public override void OnTriggerEnter(Collider other)
             {
-                if (other.gameObject.layer == LayerMask.NameToLayer("Enemies"))
-                    EnemiesInRange++;
             }
 
             public override void OnTriggerExit(Collider other)
             {
-                if (other.gameObject.tag == "Player")
 
-                    NextState = FOLLOW;
             }
 
             public override void OnTriggerStay(Collider other)
             {
-                if (other.gameObject.layer == LayerMask.NameToLayer("Enemies"))
-                {
-                    EnemiesInRange--;
-                    if (EnemiesInRange == 0)
-                        NextState = IDLE;
-                }
             }
 
             public override void UpdateState()

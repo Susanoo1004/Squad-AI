@@ -1,13 +1,18 @@
+using System;
 using System.Collections;
 using TreeEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using static UnityEditor.ShaderData;
 
-public class PlayerAgent : MonoBehaviour, IDamageable
+
+public class PlayerAgent : MonoBehaviour, ISquadLeader
 {
     [SerializeField]
     int MaxHP = 100;
+    [SerializeField]
+    int CriticalHP = 20;
+
     [SerializeField]
     float BulletPower = 1000f;
     [SerializeField]
@@ -31,6 +36,16 @@ public class PlayerAgent : MonoBehaviour, IDamageable
 
     bool IsBetweenFireRate = false;
     int CurrentHP;
+    
+    //Actions as set in the interface
+    public event Action<GameObject> OnDamageTaken;
+    public event Action<int> OnCriticalHP;
+    public event Action<Vector3> OnMoving;
+    public event Action<Vector3> OnShooting;
+
+    #region Actions
+
+    #endregion //Actions
 
     private GameObject GetTargetCursor()
     {
@@ -63,10 +78,13 @@ public class PlayerAgent : MonoBehaviour, IDamageable
         // instantiate bullet
         if (BulletPrefab && !IsBetweenFireRate)
         {
+            OnShooting?.Invoke(pos);
+
             Vector3 bulletForward = (GetTargetCursor().transform.position - GunTransform.position).normalized;
             bulletForward.y = 0;
             StartCoroutine(FireRateCoroutine(FiringRate));
             GameObject bullet = Instantiate<GameObject>(BulletPrefab, GunTransform.position + bulletForward * 0.5f, Quaternion.identity);
+            (bullet.GetComponent<Bullet>()).SetShooter(gameObject);
             bullet.layer = gameObject.layer;
             Rigidbody rb = bullet.GetComponent<Rigidbody>();
             rb.AddForce(bulletForward * BulletPower);
@@ -85,9 +103,14 @@ public class PlayerAgent : MonoBehaviour, IDamageable
     }
     public void NPCShootToPosition(Vector3 pos)
     {
+        GetNPCTargetCursor().SetActive(true);
         GetNPCTargetCursor().transform.position = pos;
     }
-    public void AddDamage(int amount)
+    public void RemoveNPCTarget()
+    {
+        GetNPCTargetCursor().SetActive(false);
+    }
+    public void AddDamage(int amount, GameObject source)
     {
         CurrentHP -= amount;
         if (CurrentHP <= 0)
@@ -95,19 +118,29 @@ public class PlayerAgent : MonoBehaviour, IDamageable
             IsDead = true;
             CurrentHP = 0;
         }
+        else if (CurrentHP < CriticalHP)
+        {
+            OnCriticalHP?.Invoke(CurrentHP);
+        }
         if (HPSlider != null)
         {
+            OnDamageTaken?.Invoke(source);
             HPSlider.value = CurrentHP;
         }
     }
-    public void Heal(int amount)
+    public bool Heal(int amount)
     {
-        CurrentHP += amount;
+        if (CurrentHP >= MaxHP)
+            return false;
 
+        CurrentHP += amount;
+        return true;
     }
     public void MoveToward(Vector3 velocity)
     {
-        rb.MovePosition(rb.position + velocity * Time.deltaTime);
+        Vector3 arrival = rb.position + velocity * Time.deltaTime;
+        OnMoving?.Invoke(arrival);
+        rb.MovePosition(arrival);
     }
 
     #region MonoBehaviour Methods
