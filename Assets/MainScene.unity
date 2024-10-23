@@ -1898,13 +1898,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AIAgentPrefab: {fileID: 7698556042702200219, guid: afe0ca0e90dc4e94989f948611cc121a,
     type: 3}
-  numberOfAIAgents: 3
+  numberOfAIAgents: 4
   PlayerStart: {fileID: 1875079898}
   Formation: {fileID: 1540582464}
   SquadLeader: {fileID: 0}
   DistanceToMove: 3
   DistanceFromTarget: 3
   Protector: {fileID: 0}
+  Healer: {fileID: 0}
 --- !u!4 &1540582466
 Transform:
   m_ObjectHideFlags: 0
@@ -2939,7 +2940,7 @@ NavMeshObstacle:
   m_Enabled: 1
   serializedVersion: 3
   m_Shape: 1
-  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_Extents: {x: 0.75, y: 0.75, z: 0.75}
   m_MoveThreshold: 0.1
   m_Carve: 1
   m_CarveOnlyStationary: 1

@@ -8,6 +8,7 @@ namespace FSM
 
     public class AIAgentFSM : BaseFSM<AIAgentFSM.AIState>
     {
+        static readonly public float AIStateUpdateDeltaTime = 0.1f;
         public enum AIState
         {
             IDLE,
