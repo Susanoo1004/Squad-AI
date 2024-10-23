@@ -8,6 +8,7 @@ public class Bullet : MonoBehaviour
     public void SetShooter(GameObject instigator)
     {
         Instigator = instigator;
+        gameObject.layer = instigator.layer;
     }
     public float Duration = 2f;
     void Start()
@@ -32,7 +33,7 @@ public class Bullet : MonoBehaviour
 
         IDamageable damagedAgent = other.gameObject.GetComponentInParent<IDamageable>();
         if (damagedAgent == null)
-            damagedAgent = other.gameObject.GetComponent<IDamageable>();
+            damagedAgent = other.gameObject.GetComponentInParent<IDamageable>();
         damagedAgent?.AddDamage(1,Instigator);
 
         Destroy(gameObject);

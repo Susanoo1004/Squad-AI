@@ -54,7 +54,6 @@ public class TurretAgent : MonoBehaviour, IDamageable
         {
             GameObject bullet = Instantiate<GameObject>(BulletPrefab, GunTransform.position + transform.forward * 0.5f, Quaternion.identity);
             (bullet.GetComponent<Bullet>()).SetShooter(gameObject);
-            bullet.layer = gameObject.layer;
             Rigidbody rb = bullet.GetComponent<Rigidbody>();
             rb.AddForce(transform.forward * BulletPower);
         }
