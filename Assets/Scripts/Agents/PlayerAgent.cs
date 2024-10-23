@@ -81,7 +81,7 @@ public class PlayerAgent : MonoBehaviour, ISquadLeader
             OnShooting?.Invoke(pos);
 
             Vector3 bulletForward = (GetTargetCursor().transform.position - GunTransform.position).normalized;
-            bulletForward.y = 0;
+            bulletForward.y = 0f;
             StartCoroutine(FireRateCoroutine(FiringRate));
             GameObject bullet = Instantiate<GameObject>(BulletPrefab, GunTransform.position + bulletForward * 0.5f, Quaternion.identity);
             (bullet.GetComponent<Bullet>()).SetShooter(gameObject);

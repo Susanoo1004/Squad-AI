@@ -132,12 +132,6 @@ namespace Squad
         }
         void HandleShootingLeader(Vector3 target)
         {
-            foreach (AIAgent agent in Agents)
-            {
-                ChangeState(agent, AIAgentFSM.AIState.SUPPORT);
-                agent.ShootingTarget = target;
-            }
-
         }
         void HandleDamageTakenLeader(GameObject instigator)
         {
@@ -196,12 +190,12 @@ namespace Squad
             //    }
             //}
         }
-        void OrderBarrageFire(Vector3 target)
+        public void OrderBarrageFire(Vector3 target)
         {
             foreach (AIAgent agent in Agents)
             {
-                ChangeState(agent, AIAgentFSM.AIState.BARRAGE);
                 agent.ShootingTarget = target;
+                ChangeState(agent, AIAgentFSM.AIState.BARRAGE);
             }
         }
 
@@ -209,6 +203,7 @@ namespace Squad
         {
             agent.gameObject.GetComponentInChildren<AIAgentFSM>().ChangeState(newState);
         }
+
         IEnumerator EndingStateCoroutine(AIAgentFSM aiAgentFSM, AIAgentFSM.AIState state, Action func)
         {
             yield return new WaitUntil(() => aiAgentFSM.CurrentState.StateKey != state);

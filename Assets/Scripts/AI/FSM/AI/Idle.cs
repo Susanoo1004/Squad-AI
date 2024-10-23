@@ -30,8 +30,7 @@ namespace FSM
                 Player = FindAnyObjectByType(typeof(PlayerAgent)) as PlayerAgent;
                 #region Events //Can be better
                 //Player.OnDamageTaken += HandlePlayerDamaged;
-                //Inputs.OnMouseLeftClicked += HandleSupportFireInput;
-                //Inputs.OnMouseLeftHold += HandleSupportFireInput;
+                Player.OnShooting += HandleSupportFireInput;
                 //Inputs.OnMouseRightClicked += HandleBarrageFireInput;
                 SquadController.OnMoving += HandleSquadMoving;
                 #endregion //Events Can be better
@@ -41,8 +40,7 @@ namespace FSM
             {
                 #region Events //Can be better
                 //Player.OnDamageTaken -= HandlePlayerDamaged;
-                //Inputs.OnMouseLeftClicked -= HandleSupportFireInput;
-                //Inputs.OnMouseLeftHold -= HandleSupportFireInput;
+                Player.OnShooting -= HandleSupportFireInput;
                 //Inputs.OnMouseRightClicked -= HandleBarrageFireInput;
                 SquadController.OnMoving -= HandleSquadMoving;
 
@@ -50,17 +48,14 @@ namespace FSM
             }
             public override void EnterState()
             {
-                //if (playerDetected)
-                    NextState = IDLE;
-                //else
-                    //NextState = FOLLOW;
-
+                base.EnterState();
                 AIAgent.StopMove();
             }
 
             public override void ExitState()
             {
-
+                base.ExitState();
+                NextState = IDLE;
             }
 
             public override AIAgentFSM.AIState GetNextSate()
@@ -74,18 +69,22 @@ namespace FSM
             }
             public void HandlePlayerDamaged(GameObject source)
             {
+                if (!IsActive)
+                    return;
                 NextState = PROTECT;
                 AIAgent.RegisteredEnemy = source.transform;
             }
 
             void HandleSupportFireInput(Vector3 target)
             {
-                NextState = SUPPORT;
+                if (!IsActive)
+                    return;
                 AIAgent.ShootingTarget = target;
+                NextState = SUPPORT;
             }
             void HandleBarrageFireInput(Vector3 target)
             {
-                if (!Inputs.IsBarrageMode) //Important
+                if (!IsActive || !Inputs.IsBarrageMode) //Important
                     return;
                 NextState = BARRAGE;
                 AIAgent.ShootingTarget = target;
