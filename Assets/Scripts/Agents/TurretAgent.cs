@@ -21,7 +21,7 @@ public class TurretAgent : MonoBehaviour, IDamageable
 
     Transform GunTransform;
 
-    bool IsDead = false;
+    bool IsDead = false; //Debug purposes
     [SerializeField]
     int CurrentHP;
     [SerializeField]

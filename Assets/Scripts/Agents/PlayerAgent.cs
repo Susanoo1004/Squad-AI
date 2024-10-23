@@ -86,13 +86,8 @@ public class PlayerAgent : MonoBehaviour, ISquadLeader
             GameObject bullet = Instantiate<GameObject>(BulletPrefab, GunTransform.position + bulletForward * 0.5f, Quaternion.identity);
             (bullet.GetComponent<Bullet>()).SetShooter(gameObject);
             bullet.layer = gameObject.layer;
-            Rigidbody rb = bullet.GetComponent<Rigidbody>();
-            rb.AddForce(bulletForward * BulletPower);
-
-            /*
-            rb.excludeLayers += bullet.layer;
-            bullet.GetComponent<SphereCollider>().excludeLayers += bullet.layer;
-            */
+            Rigidbody bullet_rb = bullet.GetComponent<Rigidbody>();
+            bullet_rb.AddForce(bulletForward * BulletPower);
         }
     }
     private IEnumerator FireRateCoroutine(float duration)

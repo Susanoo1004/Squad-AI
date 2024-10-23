@@ -1,10 +1,10 @@
 using FSM;
+using FSM.AI;
 using FSMMono;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 
 namespace Squad
@@ -16,8 +16,14 @@ namespace Squad
         [SerializeField]
         private uint numberOfAIAgents = 3;
         public uint NumberOfUnits { get { return numberOfAIAgents; } }
+
         [SerializeField]
-        private Transform PlayerStart = null;
+        private float MinDistanceToProtect = 7f;
+        [SerializeField]
+        private float MinDistanceToHeal = 10f;
+
+        [SerializeField]
+        private Transform LeaderStart = null;
         [SerializeField]
         private ISquadFormation Formation =
             null;
@@ -37,6 +43,7 @@ namespace Squad
 
         public AIAgent Protector;
         public AIAgent Healer;
+        private bool IsBarrageMode = false;
 
         private void Awake()
         {
@@ -48,13 +55,13 @@ namespace Squad
         // Start is called before the first frame update
         void Start()
         {
-            transform.position = PlayerStart.position;
+            transform.position = LeaderStart.position;
             SquadLeaderComp.OnMoving += HandleMovingLeader;
             SquadLeaderComp.OnShooting += HandleShootingLeader;
             SquadLeaderComp.OnDamageTaken += HandleDamageTakenLeader;
             SquadLeaderComp.OnCriticalHP += HandleCriticalHPLeader;
 
-            Target = PlayerStart.transform.position;
+            Target = LeaderStart.transform.position;
             for (uint i = 0; i < numberOfAIAgents; i++)
             {
                 GameObject unitInst = InstantiateAAIAgent();
@@ -94,13 +101,13 @@ namespace Squad
         }
         public void SetTargetPos(Vector3 newTarget)
         {
+            Vector3 direction = SquadLeader.forward;
             Target = newTarget;
             Barycenter = ComputeBarycenter();
-            Vector3 direction = SquadLeader.forward;
             float angle = Mathf.Atan2(direction.x, direction.z);
             float cosA = Mathf.Cos(angle);
             float sinA = Mathf.Sin(angle);
-            Vector3 TargetWithDistance = newTarget - DistanceFromTarget * direction;
+            Vector3 TargetWithDistance = newTarget - DistanceFromTarget * new Vector3(direction.x, 0f, direction.z);
             for (uint i = 0; i < Agents.Count; i++)
                 Agents[(int)i].SquadTarget = TargetWithDistance + Formation.GetOffset(i, cosA, sinA);
         }
@@ -136,7 +143,7 @@ namespace Squad
         }
         void HandleDamageTakenLeader(GameObject instigator)
         {
-            if (Protector != null)
+            if (Protector != null || )
                 return;
             else
             {
@@ -144,7 +151,7 @@ namespace Squad
                 int maxPriority = 0;
                 foreach (AIAgent agent in Agents)
                 {
-                    if (Vector3.Distance(agent.transform.position, SquadLeader.position) > 5f /*MinDistanceToProtect*/)
+                    if (Vector3.SqrMagnitude(agent.transform.position - SquadLeader.position) > MinDistanceToProtect * MinDistanceToProtect)
                         break;
                     // if(maxPriority < agent. /*agent.ProtectPriority*/)
                     //    {
@@ -154,7 +161,9 @@ namespace Squad
                 }
 
                 Protector = bestProtector;
-                if (Protector != null)
+                if (!Protector || IsBarrageMode)
+                    return;
+                //ELSE
                 {
                     Protector.RegisteredEnemy = instigator.transform;
                     ChangeState(Protector, AIAgentFSM.AIState.PROTECT);
@@ -164,7 +173,6 @@ namespace Squad
         }
         void HandleCriticalHPLeader(int currentHP)
         {
-            //TO ADD When Heal State is completed
 
             if (Healer != null)
                 return;
@@ -175,7 +183,7 @@ namespace Squad
 
                 foreach (AIAgent agent in Agents)
                 {
-                    if (Vector3.Distance(agent.transform.position, SquadLeader.position) > 5f /*MinDistanceToHeal*/)
+                    if (Vector3.SqrMagnitude(agent.transform.position - SquadLeader.position) > MinDistanceToHeal * MinDistanceToHeal)
                         break;
                     //if(maxPriority < agent. /*agent.HealPriority*/)
                     //{
@@ -185,7 +193,9 @@ namespace Squad
                 }
 
                 Healer = bestHealer;
-                if (Healer != null)
+                if (!Healer || IsBarrageMode)
+                    return;
+                //ELSE
                 {
                     ChangeState(Healer, AIAgentFSM.AIState.HEAL);
                     StartCoroutine(EndingStateCoroutine(Healer.gameObject.GetComponentInChildren<AIAgentFSM>(), AIAgentFSM.AIState.HEAL, () => Healer = null));

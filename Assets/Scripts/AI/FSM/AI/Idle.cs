@@ -15,23 +15,21 @@ namespace FSM
             AIAgent AIAgent;
             SquadController SquadController;
 
-            PlayerAgent Player;
+            ISquadLeader Leader;
             SimpleController Inputs;
 
             public Idle() : base(IDLE)
             { }
-            bool playerDetected = false;
+            bool playerDetected = false; //Debug purposes
 
             private void Awake()
             {
                 Inputs = FindAnyObjectByType<SimpleController>();
                 AIAgent = transform.parent.parent.GetComponent<AIAgent>();
                 SquadController = AIAgent.transform.parent.GetComponent<SquadController>();
-                Player = FindAnyObjectByType(typeof(PlayerAgent)) as PlayerAgent;
+                Leader = FindAnyObjectByType(typeof(ISquadLeader)) as ISquadLeader;
                 #region Events //Can be better
-                //Player.OnDamageTaken += HandlePlayerDamaged;
-                Player.OnShooting += HandleSupportFireInput;
-                //Inputs.OnMouseRightClicked += HandleBarrageFireInput;
+                Leader.OnShooting += HandleSupportFireInput;
                 SquadController.OnMoving += HandleSquadMoving;
                 #endregion //Events Can be better
             }
@@ -39,9 +37,7 @@ namespace FSM
             private void OnDestroy()
             {
                 #region Events //Can be better
-                //Player.OnDamageTaken -= HandlePlayerDamaged;
-                Player.OnShooting -= HandleSupportFireInput;
-                //Inputs.OnMouseRightClicked -= HandleBarrageFireInput;
+                Leader.OnShooting -= HandleSupportFireInput;
                 SquadController.OnMoving -= HandleSquadMoving;
 
                 #endregion //Events Can be better
@@ -67,7 +63,7 @@ namespace FSM
             {
                 NextState = FOLLOW;
             }
-            public void HandlePlayerDamaged(GameObject source)
+            public void HandleLeaderDamaged(GameObject source)
             {
                 if (!IsActive)
                     return;
@@ -91,11 +87,6 @@ namespace FSM
             }
             public override void OnTriggerEnter(Collider other)
             {
-                //if (other.gameObject.layer == LayerMask.NameToLayer("Enemies"))
-                //{
-                //    NextState = SUPPORT;
-                //    AIAgent.RegisteredEnemy = other.gameObject.transform;
-                //}
                 if (other.gameObject.tag == "Player")
                 {
                     playerDetected = true;
@@ -107,7 +98,6 @@ namespace FSM
                 if (other.gameObject.tag == "Player")
                 {
                     playerDetected = false;
-                    //NextState = FOLLOW;
                 }
             }
 
