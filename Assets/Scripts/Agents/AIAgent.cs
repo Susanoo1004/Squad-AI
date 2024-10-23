@@ -43,7 +43,6 @@ namespace FSMMono
 
         public Vector3 MoveTarget;  //Position to move outside of the squad
         public Vector3 SquadTarget; //Position to move with squad offset
-
         public Vector3 ShootingTarget;
 
         public Transform RegisteredEnemy;

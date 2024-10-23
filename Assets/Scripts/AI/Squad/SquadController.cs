@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 
 namespace Squad
@@ -28,6 +29,8 @@ namespace Squad
 
         [SerializeField]
         private float DistanceToMove = 5f;
+        public event Action OnMoving;
+
         [SerializeField]
         private float DistanceFromTarget = 2f;
         Vector3 Barycenter;
@@ -45,6 +48,7 @@ namespace Squad
         // Start is called before the first frame update
         void Start()
         {
+            transform.position = PlayerStart.position;
             SquadLeaderComp.OnMoving += HandleMovingLeader;
             SquadLeaderComp.OnShooting += HandleShootingLeader;
             SquadLeaderComp.OnDamageTaken += HandleDamageTakenLeader;
@@ -68,8 +72,7 @@ namespace Squad
 
         GameObject InstantiateAAIAgent()
         {
-            GameObject unitInst = Instantiate(AIAgentPrefab, PlayerStart, false);
-            unitInst.transform.parent = transform;
+            GameObject unitInst = Instantiate(AIAgentPrefab, transform, false);
             AIAgent unit = unitInst.GetComponent<AIAgent>();
             Agents.Add(unitInst.GetComponent<AIAgent>());
 
@@ -91,6 +94,7 @@ namespace Squad
         }
         public void SetTargetPos(Vector3 newTarget)
         {
+            Target = newTarget;
             Barycenter = ComputeBarycenter();
             Vector3 direction = SquadLeader.forward;
             float angle = Mathf.Atan2(direction.x, direction.z);
@@ -122,7 +126,10 @@ namespace Squad
         void HandleMovingLeader(Vector3 destination)
         {
             if (Vector3.SqrMagnitude(Target - destination) > DistanceToMove * DistanceToMove)
+            {
                 SetTargetPos(destination);
+                OnMoving?.Invoke();
+            }
         }
         void HandleShootingLeader(Vector3 target)
         {

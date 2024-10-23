@@ -21,6 +21,7 @@ namespace FSM
             Transform Player;
             SimpleController Inputs;
             SquadController SquadController;
+            bool IsPlayeDetected = false;
 
             public Protect() : base(PROTECT)
             { }
@@ -35,6 +36,8 @@ namespace FSM
             private void Start()
             {
                 SquadController = AIAgent.transform.parent.GetComponent<SquadController>();
+                
+                
             }
             private void OnDestroy()
             {
@@ -70,12 +73,17 @@ namespace FSM
 
             public override void OnTriggerEnter(Collider other)
             {
+                if (other.gameObject.tag == "Player")
+                    IsPlayeDetected = true;
             }
 
             public override void OnTriggerExit(Collider other)
             {
                 if (other.gameObject.tag == "Player")
+                {
+                    IsPlayeDetected = false;
                     NextState = IDLE;
+                }
             }
 
             public override void OnTriggerStay(Collider other)

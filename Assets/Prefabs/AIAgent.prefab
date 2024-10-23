@@ -437,7 +437,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4386164665440425097}
-  - component: {fileID: 671889484650320436}
+  - component: {fileID: 8706535042625413903}
+  - component: {fileID: 1489247990120293099}
   m_Layer: 7
   m_Name: PROTECT
   m_TagString: Untagged
@@ -460,7 +461,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1542159699858675560}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &671889484650320436
+--- !u!114 &8706535042625413903
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -472,7 +473,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8c32c27fbb7b3140b222ba092a145ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Distance: 1
+  Distance: 2
+--- !u!135 &1489247990120293099
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2701753224944073366}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 3
+  m_Center: {x: 0, y: 1.5, z: 0}
 --- !u!1 &3298841578255656734
 GameObject:
   m_ObjectHideFlags: 0
@@ -601,7 +623,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2302664983963183427}
-  - component: {fileID: 8672565172929802080}
+  - component: {fileID: 8330951478982622530}
   m_Layer: 7
   m_Name: BARRAGE
   m_TagString: Untagged
@@ -624,7 +646,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1542159699858675560}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8672565172929802080
+--- !u!114 &8330951478982622530
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1053,7 +1075,7 @@ GameObject:
   m_Component:
   - component: {fileID: 718498195841843622}
   - component: {fileID: 4819004035248669532}
-  - component: {fileID: 2815578588819687997}
+  - component: {fileID: 2231753676150383545}
   m_Layer: 7
   m_Name: HEAL
   m_TagString: Untagged
@@ -1097,7 +1119,7 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 2
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &2815578588819687997
+--- !u!114 &2231753676150383545
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

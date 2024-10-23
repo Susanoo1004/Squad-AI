@@ -32,7 +32,8 @@ namespace FSM
                 //Player.OnDamageTaken += HandlePlayerDamaged;
                 //Inputs.OnMouseLeftClicked += HandleSupportFireInput;
                 //Inputs.OnMouseLeftHold += HandleSupportFireInput;
-                Inputs.OnMouseRightClicked += HandleBarrageFireInput;
+                //Inputs.OnMouseRightClicked += HandleBarrageFireInput;
+                SquadController.OnMoving += HandleSquadMoving;
                 #endregion //Events Can be better
             }
 
@@ -42,15 +43,17 @@ namespace FSM
                 //Player.OnDamageTaken -= HandlePlayerDamaged;
                 //Inputs.OnMouseLeftClicked -= HandleSupportFireInput;
                 //Inputs.OnMouseLeftHold -= HandleSupportFireInput;
-                Inputs.OnMouseRightClicked -= HandleBarrageFireInput;
+                //Inputs.OnMouseRightClicked -= HandleBarrageFireInput;
+                SquadController.OnMoving -= HandleSquadMoving;
+
                 #endregion //Events Can be better
             }
             public override void EnterState()
             {
-                if (playerDetected)
+                //if (playerDetected)
                     NextState = IDLE;
-                else
-                    NextState = FOLLOW;
+                //else
+                    //NextState = FOLLOW;
 
                 AIAgent.StopMove();
             }
@@ -65,6 +68,10 @@ namespace FSM
                 return NextState;
             }
 
+            public void HandleSquadMoving()
+            {
+                NextState = FOLLOW;
+            }
             public void HandlePlayerDamaged(GameObject source)
             {
                 NextState = PROTECT;
@@ -101,7 +108,7 @@ namespace FSM
                 if (other.gameObject.tag == "Player")
                 {
                     playerDetected = false;
-                    NextState = FOLLOW;
+                    //NextState = FOLLOW;
                 }
             }
 

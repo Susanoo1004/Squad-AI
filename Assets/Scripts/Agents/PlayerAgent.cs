@@ -134,6 +134,7 @@ public class PlayerAgent : MonoBehaviour, ISquadLeader
             return false;
 
         CurrentHP += amount;
+        HPSlider.value = CurrentHP;
         return true;
     }
     public void MoveToward(Vector3 velocity)
@@ -165,5 +166,9 @@ public class PlayerAgent : MonoBehaviour, ISquadLeader
 
     #endregion
 
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(transform.position, 5);
+    }
 
 }
