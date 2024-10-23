@@ -100,6 +100,11 @@ public class PlayerAgent : MonoBehaviour, IDamageable
             HPSlider.value = CurrentHP;
         }
     }
+    public void Heal(int amount)
+    {
+        CurrentHP += amount;
+
+    }
     public void MoveToward(Vector3 velocity)
     {
         rb.MovePosition(rb.position + velocity * Time.deltaTime);
