@@ -32,7 +32,7 @@ public class TurretAgent : MonoBehaviour, IDamageable
 
     [SerializeField] private GameObject DeathExplosion;
 
-    public float RangeOfSight { get; private set; } = 10f;
+    public float RangeOfSight { get; private set; } = 15f;
 
     public void AddDamage(int amount, GameObject source)
     {
@@ -160,9 +160,14 @@ public class TurretAgent : MonoBehaviour, IDamageable
         //Test the line of sight
         Ray ray = new Ray(transform.position, (enemyPosition - transform.position).normalized);
         RaycastHit hit;
+        Debug.DrawRay(transform.position, (enemyPosition - transform.position).normalized * RangeOfSight,Color.red);
+        int layerMask = LayerMask.GetMask("Enemies", "Allies");
 
+        // Exclude the current gameObject's layer
+        int gameObjectLayerMask = 1 << gameObject.layer;
+        layerMask &= ~gameObjectLayerMask;  // Exclude the current object's layer
         // Perform the raycast and check if it hits an enemy
-        return Physics.Raycast(ray, out hit, RangeOfSight, LayerMask.NameToLayer("Enemies") + LayerMask.NameToLayer("Allies") - gameObject.layer);
+        return Physics.Raycast(ray, out hit, RangeOfSight, layerMask);
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -175,7 +180,7 @@ public class TurretAgent : MonoBehaviour, IDamageable
     }
     private void OnTriggerExit(Collider other)
     {
-        if (Target != null && other.gameObject == Target)
+        if (other.gameObject == Target)
         {
             Target = null;
         }

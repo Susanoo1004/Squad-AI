@@ -3181,8 +3181,8 @@ MonoBehaviour:
   AIAgentPrefab: {fileID: 7698556042702200219, guid: afe0ca0e90dc4e94989f948611cc121a,
     type: 3}
   numberOfAIAgents: 4
-  MinDistanceToProtect: 7
-  MinDistanceToHeal: 10
+  MinDistanceToProtect: 10
+  MinDistanceToHeal: 15
   Formation: {fileID: 1540582464}
   Leader: {fileID: 0}
   DistanceToMove: 3
@@ -4044,7 +4044,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MaxHP: 100
-  CriticalHP: 20
+  CriticalHP: 30
   BulletPower: 25
   BulletPrefab: {fileID: 2180669255350586930, guid: 1539376290df9a54e8404edc666e8d53,
     type: 3}
@@ -4054,7 +4054,8 @@ MonoBehaviour:
     type: 3}
   HPSlider: {fileID: 1549369261}
   FiringRate: 0.2
-  DeathExplosion: {fileID: 0}
+  DeathExplosion: {fileID: 1828176872806910, guid: 64891a0eb28db934898420d80ca07cb3,
+    type: 3}
 --- !u!208 &1875079902
 NavMeshObstacle:
   m_ObjectHideFlags: 0

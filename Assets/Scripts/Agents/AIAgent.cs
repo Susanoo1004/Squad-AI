@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.AI;
@@ -12,7 +13,7 @@ namespace FSMMono
     {
 
         [SerializeField]
-        int MaxHP = 100; 
+        int MaxHP = 100;
         [SerializeField]
         int CriticalHP = 20;
         [SerializeField]
@@ -102,6 +103,12 @@ namespace FSMMono
         }
         private void OnDrawGizmos()
         {
+            //Move Target
+            Gizmos.color = Color.grey;
+            Gizmos.DrawSphere(MoveTarget, 0.5f);
+            Gizmos.color = Color.black;
+            Gizmos.DrawSphere(SquadTarget, 0.5f);
+
         }
 
         #endregion
@@ -135,6 +142,7 @@ namespace FSMMono
         }
         public void MoveTo(Vector3 dest)
         {
+            MoveTarget = dest;
             OnMoving?.Invoke(dest);
             NavMeshAgentInst.isStopped = false;
             NavMeshAgentInst.SetDestination(dest);
@@ -228,17 +236,16 @@ namespace FSMMono
             // instantiate bullet
             if (BulletPrefab && !IsRecharging)
             {
+                pos.y = 0f;
                 OnShooting?.Invoke(pos);
                 transform.LookAt(pos + Vector3.up * transform.position.y);
                 StartCoroutine(RechargeCoroutine());
-                GameObject bullet = Instantiate<GameObject>(BulletPrefab, GunTransform.position + GunTransform.forward * 0.5f, Quaternion.identity);
+                GameObject bullet = Instantiate(BulletPrefab, GunTransform.position + GunTransform.forward * 0.5f, Quaternion.identity);
                 (bullet.GetComponent<Bullet>()).SetShooter(gameObject);
                 bullet.layer = gameObject.layer;
-                Rigidbody rb = bullet.GetComponent<Rigidbody>();
-                rb.AddForce(transform.forward * BulletPower);
+                Rigidbody bullet_rb = bullet.GetComponent<Rigidbody>();
+                bullet_rb.AddForce(transform.forward * BulletPower);
             }
-
-            //StartCoroutine(TurnAndShootCoroutine(pos));
         }
         IEnumerator RechargeCoroutine()
         {
@@ -274,14 +281,10 @@ namespace FSMMono
         public void ShootRegisteredEnemy()
         {
             if (RegisteredEnemy)
-                ShootToPosition(RegisteredEnemy.position - Vector3.up * transform.position.y);
+                ShootToPosition(RegisteredEnemy.position);
         }
 
         Vector3 velocity = Vector3.zero;
-
-        public void FixedUpdate()
-        {
-        }
         #endregion
     }
 }

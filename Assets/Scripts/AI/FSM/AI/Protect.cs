@@ -90,9 +90,9 @@ namespace FSM
 
             public override void UpdateState()
             {
-                if (!Enemy)
+                if (!Enemy.gameObject || !Enemy.gameObject.activeInHierarchy)
                 {
-                    //RemoveProtector();
+                    RemoveProtector();
                     NextState = IDLE;
                     return;
                 }

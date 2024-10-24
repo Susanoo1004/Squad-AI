@@ -4,8 +4,9 @@ using FSMMono;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
+using static UnityEngine.EventSystems.EventTrigger;
 
 
 namespace Squad
@@ -42,7 +43,7 @@ namespace Squad
 
         public AIAgent Protector;
         public AIAgent Healer;
-        private bool IsBarrageMode = false;
+        public bool IsBarrageMode { get; private set; } = false;
 
         private void Awake()
         {
@@ -118,7 +119,7 @@ namespace Squad
             Vector3 direction = Leader.forward;
             Target = newTarget;
             Barycenter = ComputeBarycenter();
-            float angle = Mathf.Atan2(direction.x, direction.z);
+            float angle = -Mathf.Atan2(direction.x, direction.z);
             float cosA = Mathf.Cos(angle);
             float sinA = Mathf.Sin(angle);
             Vector3 TargetWithDistance = newTarget - DistanceFromTarget * new Vector3(direction.x, 0f, direction.z);
@@ -251,13 +252,15 @@ namespace Squad
         }
         public void OrderBarrageFire(Vector3 target)
         {
+            IsBarrageMode = !IsBarrageMode;
+            if (!IsBarrageMode)
+                return;
             foreach (AIAgent agent in Agents)
             {
                 agent.ShootingTarget = target;
                 ChangeState(agent, AIAgentFSM.AIState.BARRAGE);
             }
         }
-
         private void ChangeState(AIAgent agent, AIAgentFSM.AIState newState)
         {
             agent.gameObject.GetComponentInChildren<AIAgentFSM>().ChangeState(newState);

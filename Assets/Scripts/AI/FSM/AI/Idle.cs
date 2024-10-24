@@ -84,7 +84,7 @@ namespace FSM
             }
             void HandleBarrageFireInput(Vector3 target)
             {
-                if (!IsActive || !Inputs.IsBarrageMode) //Important
+                if (!IsActive || !SquadController.IsBarrageMode) //Important
                     return;
                 NextState = BARRAGE;
                 AIAgent.ShootingTarget = target;

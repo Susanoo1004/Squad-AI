@@ -71,6 +71,7 @@ public class SimpleController : MonoBehaviour
         {
             IsBarrageMode = !IsBarrageMode;
             OnMouseRightClicked(targetPos);
+            Allies.OrderBarrageFire(targetPos);
             if (!IsBarrageMode)
             {
                 Player.RemoveNPCTarget();
@@ -78,7 +79,6 @@ public class SimpleController : MonoBehaviour
             else
             {
                 Player.NPCShootToPosition(targetPos);
-                Allies.OrderBarrageFire(targetPos);
             }
         }
     }

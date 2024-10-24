@@ -5,10 +5,13 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     public GameObject Instigator { get;  private set; }
+    [SerializeField]
+    private int DamageAmount = 5;
 
     [SerializeField] private GameObject DamageExplosion;
-    public void SetShooter(GameObject instigator)
+    public void SetShooter(GameObject instigator, int damageAmount = 5)
     {
+        DamageAmount= damageAmount;
         Instigator = instigator;
         gameObject.layer = instigator.layer;
     }
@@ -36,7 +39,7 @@ public class Bullet : MonoBehaviour
         IDamageable damagedAgent = other.gameObject.GetComponentInParent<IDamageable>();
         if (damagedAgent == null)
             damagedAgent = other.gameObject.GetComponentInParent<IDamageable>();
-        damagedAgent?.AddDamage(1,Instigator);
+        damagedAgent?.AddDamage(DamageAmount,Instigator);
         GameObject finalExplo = Instantiate(DamageExplosion);
         finalExplo.transform.position = transform.position;
         Destroy(finalExplo, 0.5f);
