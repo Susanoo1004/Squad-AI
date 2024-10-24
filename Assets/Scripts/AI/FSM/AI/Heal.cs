@@ -32,6 +32,8 @@ namespace FSM
             [SerializeField]
             private float mRadiusToleranceRatio = 0.8f;
 
+            [SerializeField] GameObject mHealParticle;
+
             public Heal() : base(HEAL)
             { }
             private void Awake()
@@ -91,6 +93,10 @@ namespace FSM
                     if (mHealTimer < 0)
                     {
                         mHealTimer = mHealDelay;
+
+                        GameObject finalExplo = Instantiate(mHealParticle);
+                        finalExplo.transform.position = transform.position;
+                        Destroy(finalExplo, 0.5f);
 
                         if (!Player.GetComponent<PlayerAgent>().Heal((int)mHealAmount))
                             NextState = IDLE;

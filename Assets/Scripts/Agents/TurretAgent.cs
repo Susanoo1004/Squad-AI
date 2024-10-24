@@ -29,7 +29,7 @@ public class TurretAgent : MonoBehaviour, IDamageable
     GameObject Target = null;
 
     NavMeshAgent NavMeshAgentInst;
-    [SerializeField] private GameObject DamageExplosion;
+
     [SerializeField] private GameObject DeathExplosion;
 
     public float RangeOfSight { get; private set; } = 10f;
@@ -40,10 +40,6 @@ public class TurretAgent : MonoBehaviour, IDamageable
             return;
 
         CurrentHP -= amount;
-
-        GameObject explo = Instantiate(DamageExplosion);
-        explo.transform.position = transform.position;
-        Destroy(explo, 0.5f);
 
         if (CurrentHP <= 0)
         {

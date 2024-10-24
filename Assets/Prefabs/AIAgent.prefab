@@ -1134,6 +1134,8 @@ MonoBehaviour:
   mHealDelay: 0.2
   mHealRadius: 2.5
   mRadiusToleranceRatio: 0.8
+  mHealParticle: {fileID: 1096893136476370, guid: 24b82347924701148a13c746edfb6b22,
+    type: 3}
 --- !u!1 &8374670637170771689
 GameObject:
   m_ObjectHideFlags: 0

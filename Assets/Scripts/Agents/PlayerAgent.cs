@@ -46,6 +46,8 @@ public class PlayerAgent : MonoBehaviour, ISquadLeader
     public event Action OnDeath;
     public bool CheckDeath() { return IsDead; }
 
+    [SerializeField] private GameObject DeathExplosion;
+
     #region Actions
 
     #endregion //Actions
@@ -111,11 +113,17 @@ public class PlayerAgent : MonoBehaviour, ISquadLeader
     public void AddDamage(int amount, GameObject source)
     {
         CurrentHP -= amount;
+
         if (CurrentHP <= 0)
         {
             IsDead = true;
             OnDeath?.Invoke();
             CurrentHP = 0;
+
+            GameObject finalExplo = Instantiate(DeathExplosion);
+            finalExplo.transform.position = transform.position;
+            Destroy(finalExplo, 0.5f);
+
             gameObject.SetActive(false);
             return;
         }
