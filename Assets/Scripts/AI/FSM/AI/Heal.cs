@@ -22,17 +22,17 @@ namespace FSM
             SquadController SquadController;
 
             [SerializeField]
-            private float mHealTimer;
+            private float HealTimer;
             [SerializeField]
-            private uint mHealAmount = 1;
+            private uint HealAmount = 1;
             [SerializeField]
-            private float mHealDelay = 0.2f;
+            private float HealDelay = 0.2f;
             [SerializeField]
-            private float mHealRadius = 2.5f;
+            private float HealRadius = 2.5f;
             [SerializeField]
-            private float mRadiusToleranceRatio = 0.8f;
+            private float RadiusToleranceRatio = 0.8f;
 
-            [SerializeField] GameObject mHealParticle;
+            [SerializeField] GameObject HealParticle;
 
             public Heal() : base(HEAL)
             { }
@@ -40,7 +40,7 @@ namespace FSM
             {
                 AIAgent = transform.parent.parent.GetComponent<AIAgent>();
                 Player = FindAnyObjectByType<PlayerAgent>().transform;
-                mHealTimer = mHealDelay;
+                HealTimer = HealDelay;
             }
             private void Start()
             {
@@ -81,24 +81,24 @@ namespace FSM
             public override void UpdateState()
             {
                 Vector3 v = AIAgent.transform.position - Player.position;
-                if (v.magnitude > mHealRadius)
+                if (v.magnitude > HealRadius)
                 {
-                    AIAgent.MoveTo(Player.position + v.normalized * mHealRadius * mRadiusToleranceRatio);
+                    AIAgent.MoveTo(Player.position + v.normalized * HealRadius * RadiusToleranceRatio);
                 }
                 else
                 {
 
-                    mHealTimer -= AIAgentFSM.AIStateUpdateDeltaTime;// UpdateState DeltaTime 
+                    HealTimer -= AIAgentFSM.AIStateUpdateDeltaTime;// UpdateState DeltaTime 
 
-                    if (mHealTimer < 0)
+                    if (HealTimer < 0)
                     {
-                        mHealTimer = mHealDelay;
+                        HealTimer = HealDelay;
 
-                        GameObject finalExplo = Instantiate(mHealParticle);
+                        GameObject finalExplo = Instantiate(HealParticle);
                         finalExplo.transform.position = transform.position;
                         Destroy(finalExplo, 0.5f);
 
-                        if (!Player.GetComponent<PlayerAgent>().Heal((int)mHealAmount))
+                        if (!Player.GetComponent<PlayerAgent>().Heal((int)HealAmount))
                             NextState = IDLE;
                     }
                 }
