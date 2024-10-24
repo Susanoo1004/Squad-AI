@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
@@ -49,7 +50,7 @@ public class TurretAgent : MonoBehaviour, IDamageable
     void ShootToPosition(Vector3 pos)
     {
         // look at target position
-        transform.LookAt(pos + Vector3.up * transform.position.y);
+        transform.LookAt(pos + Vector3.up * (transform.position.y - pos.y));
 
         // instantiate bullet
         if (BulletPrefab)
@@ -155,6 +156,15 @@ public class TurretAgent : MonoBehaviour, IDamageable
         if (Target != null && other.gameObject == Target)
         {
             Target = null;
+        }
+    }
+    private void OnTriggerStay(Collider other)
+    {
+        if (Target)
+            return;
+        if (other.gameObject.layer == LayerMask.NameToLayer("Allies"))
+        {
+            Target = other.gameObject;
         }
     }
 }
