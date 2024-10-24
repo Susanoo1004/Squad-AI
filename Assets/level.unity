@@ -3183,9 +3183,8 @@ MonoBehaviour:
   numberOfAIAgents: 4
   MinDistanceToProtect: 7
   MinDistanceToHeal: 10
-  LeaderStart: {fileID: 0}
   Formation: {fileID: 1540582464}
-  SquadLeader: {fileID: 0}
+  Leader: {fileID: 0}
   DistanceToMove: 3
   DistanceFromTarget: 3
   Protector: {fileID: 0}
@@ -4055,6 +4054,8 @@ MonoBehaviour:
     type: 3}
   HPSlider: {fileID: 1549369261}
   FiringRate: 0.2
+  DeathExplosion: {fileID: 1828176872806910, guid: 64891a0eb28db934898420d80ca07cb3,
+    type: 3}
 --- !u!208 &1875079902
 NavMeshObstacle:
   m_ObjectHideFlags: 0

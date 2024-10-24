@@ -5,6 +5,8 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     public GameObject Instigator { get;  private set; }
+
+    [SerializeField] private GameObject DamageExplosion;
     public void SetShooter(GameObject instigator)
     {
         Instigator = instigator;
@@ -35,6 +37,9 @@ public class Bullet : MonoBehaviour
         if (damagedAgent == null)
             damagedAgent = other.gameObject.GetComponentInParent<IDamageable>();
         damagedAgent?.AddDamage(1,Instigator);
+        GameObject finalExplo = Instantiate(DamageExplosion);
+        finalExplo.transform.position = transform.position;
+        Destroy(finalExplo, 0.5f);
 
         Destroy(gameObject);
     }
