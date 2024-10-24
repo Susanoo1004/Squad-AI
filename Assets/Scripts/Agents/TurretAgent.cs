@@ -30,14 +30,29 @@ public class TurretAgent : MonoBehaviour, IDamageable
     GameObject Target = null;
 
     NavMeshAgent NavMeshAgentInst;
+    [SerializeField] private GameObject DamageExplosion;
+    [SerializeField] private GameObject DeathExplosion;
 
     public void AddDamage(int amount, GameObject source)
     {
+        if (IsDead)
+            return;
+
         CurrentHP -= amount;
+
+        GameObject explo = Instantiate(DamageExplosion);
+        explo.transform.position = transform.position;
+        Destroy(explo, 0.5f);
+
         if (CurrentHP <= 0)
         {
             IsDead = true;
             CurrentHP = 0;
+
+            GameObject finalExplo = Instantiate(DeathExplosion);
+            finalExplo.transform.position = transform.position;
+            Destroy(finalExplo, 0.5f);
+
             gameObject.SetActive(false);
         }
 
@@ -118,6 +133,7 @@ public class TurretAgent : MonoBehaviour, IDamageable
 
     void Start()
     {
+
         NavMeshAgentInst = GetComponent<NavMeshAgent>();
 
         CurrentHP = MaxHP;

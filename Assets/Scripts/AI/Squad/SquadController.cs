@@ -143,7 +143,7 @@ namespace Squad
         }
         void HandleDamageTakenLeader(GameObject instigator)
         {
-            if (Protector != null || )
+            if (Protector != null || IsBarrageMode)
                 return;
             else
             {
