@@ -1,7 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using UnityEngine.Events;
-using System.Collections;
 using Squad;
 
 public class SimpleController : MonoBehaviour
@@ -29,13 +27,7 @@ public class SimpleController : MonoBehaviour
         viewCamera = Camera.main;
 
         OnMouseLeftClicked += Player.ShootToPosition;
-        //OnMouseLeftClicked += Allies.OrderToShoot;
         OnMouseLeftHold += Player.ShootToPosition;
-        //OnMouseLeftHold += Allies.OrderToShoot;
-
-
-        //OnMouseRightClicked += Player.NPCShootToPosition;
-        //OnMouseRightClicked += Allies.OrderBarrageFire;
     }
     private void OnDestroy()
     {

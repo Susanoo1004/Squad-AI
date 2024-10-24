@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using UnityEditorInternal;
 using UnityEngine;
 
 namespace FSM
@@ -11,7 +10,7 @@ namespace FSM
         [SerializeField]
         protected Dictionary<EState, BaseState<EState>> States = new();
         [SerializeField]
-        public BaseState<EState> CurrentState /*{ get; protected set; }*/;
+        public BaseState<EState> CurrentState;
         [SerializeField]
         protected float UpdateDeltaTime = 0.1f;
         private float NextUpdateTime;

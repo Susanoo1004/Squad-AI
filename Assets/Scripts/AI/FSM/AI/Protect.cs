@@ -1,7 +1,5 @@
 using UnityEngine;
-
 using FSMMono;
-using UnityEngine.Windows;
 using Squad;
 
 namespace FSM

@@ -1,10 +1,7 @@
 using System;
 using System.Collections;
-using System.Runtime.InteropServices.WindowsRuntime;
-using TreeEditor;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.ShaderData;
 
 
 public class PlayerAgent : MonoBehaviour, ISquadLeader
