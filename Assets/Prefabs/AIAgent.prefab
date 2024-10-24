@@ -1034,7 +1034,7 @@ MonoBehaviour:
     type: 3}
   HPSlider: {fileID: 235590534653286784}
   Role: 2
-  RechargeDuration: 1
+  RechargeDuration: 0.8
   MoveTarget: {x: 0, y: 0, z: 0}
   SquadTarget: {x: 0, y: 0, z: 0}
   ShootingTarget: {x: 0, y: 0, z: 0}
