@@ -61,8 +61,8 @@ First dowload the project either from this repositories or from another source. 
 
 ## Finite State Machine 
 
+We used  a Finite State Machine (FSM) to realise our AI. We created a different state for each action the agent could do and changing his current state when he had to do an action. All the state leads to the IDLE state when they are finished. Also the BARRAGE state has priority over all the other state. 
+
 ## Limits of our FSM and possible improvements
 
 For our IA we should had 3 differents Prefabs for a tank, an attacker and a medic where you could have changed the values for the probabilty for each event to occur. Also we didn't had the time to implement a system where their actions will be influenced by an emotinal state attached like coward, brave,... 
-
-## Screenshots
