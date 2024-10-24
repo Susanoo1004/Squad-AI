@@ -1,7 +1,5 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
@@ -33,6 +31,8 @@ public class TurretAgent : MonoBehaviour, IDamageable
     NavMeshAgent NavMeshAgentInst;
     [SerializeField] private GameObject DamageExplosion;
     [SerializeField] private GameObject DeathExplosion;
+
+    public float RangeOfSight { get; private set; } = 10f;
 
     public void AddDamage(int amount, GameObject source)
     {
@@ -159,11 +159,20 @@ public class TurretAgent : MonoBehaviour, IDamageable
         }
         HPSlider.transform.parent.rotation = Quaternion.identity;
     }
+    public bool IsEnemyAimable(Vector3 enemyPosition)
+    {
+        //Test the line of sight
+        Ray ray = new Ray(transform.position, (enemyPosition - transform.position).normalized);
+        RaycastHit hit;
 
+        // Perform the raycast and check if it hits an enemy
+        return Physics.Raycast(ray, out hit, RangeOfSight, LayerMask.NameToLayer("Enemies") | LayerMask.NameToLayer("Allies") & ~gameObject.layer);
+    }
     private void OnTriggerEnter(Collider other)
     {
-        if (Target == null && other.gameObject.layer == LayerMask.NameToLayer("Allies"))
+        if (Target == null && other.gameObject.layer == (LayerMask.NameToLayer("Enemies") | LayerMask.NameToLayer("Allies") & ~gameObject.layer))
         {
+            if(IsEnemyAimable(Target.transform.position))
             Target = other.gameObject;
         }
     }
@@ -178,9 +187,10 @@ public class TurretAgent : MonoBehaviour, IDamageable
     {
         if (Target)
             return;
-        if (other.gameObject.layer == LayerMask.NameToLayer("Allies"))
+        if (other.gameObject.layer ==( LayerMask.NameToLayer("Enemies") | LayerMask.NameToLayer("Allies") & ~gameObject.layer))
         {
-            Target = other.gameObject;
+            if (IsEnemyAimable(Target.transform.position))
+                Target = other.gameObject;
         }
     }
 }
