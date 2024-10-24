@@ -34,11 +34,12 @@ namespace FSM
             public override void EnterState()
             {
                 NextState = BARRAGE;
+                AIAgent.SetMaterial(Color.magenta);
             }
 
             public override void ExitState()
             {
-
+                AIAgent.SetDefaultMaterial();
             }
 
             public override AIAgentFSM.AIState GetNextSate()

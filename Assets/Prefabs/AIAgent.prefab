@@ -505,7 +505,6 @@ GameObject:
   m_Component:
   - component: {fileID: 829058964011207183}
   - component: {fileID: 630764850518465283}
-  - component: {fileID: 4527290019158998055}
   m_Layer: 7
   m_Name: SUPPORT
   m_TagString: Untagged
@@ -540,27 +539,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d69bd0c103170b44ebbac93899ae5927, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!135 &4527290019158998055
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3298841578255656734}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4321426963130376063
 GameObject:
   m_ObjectHideFlags: 0
@@ -1033,6 +1011,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MaxHP: 100
+  CriticalHP: 20
   BulletPower: 25
   BulletPrefab: {fileID: 2180669255350586930, guid: 1539376290df9a54e8404edc666e8d53,
     type: 3}
@@ -1132,6 +1111,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Distance: 1
+  mHealTimer: 0
+  mHealAmount: 0
+  mHealDelay: 0.2
+  mHealRadius: 2.5
+  mRadiusToleranceRatio: 0.8
 --- !u!1 &8374670637170771689
 GameObject:
   m_ObjectHideFlags: 0

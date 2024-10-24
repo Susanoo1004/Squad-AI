@@ -27,7 +27,7 @@ namespace FSM
                 Inputs = FindAnyObjectByType<SimpleController>();
                 AIAgent = transform.parent.parent.GetComponent<AIAgent>();
                 SquadController = AIAgent.transform.parent.GetComponent<SquadController>();
-                Leader = FindAnyObjectByType(typeof(ISquadLeader)) as ISquadLeader;
+                Leader = SquadController.LeaderComp;
                 #region Events //Can be better
                 Leader.OnShooting += HandleSupportFireInput;
                 SquadController.OnMoving += HandleSquadMoving;
@@ -46,6 +46,7 @@ namespace FSM
             {
                 base.EnterState();
                 AIAgent.StopMove();
+
             }
 
             public override void ExitState()

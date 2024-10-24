@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 
 namespace Squad
@@ -23,15 +24,13 @@ namespace Squad
         private float MinDistanceToHeal = 10f;
 
         [SerializeField]
-        private Transform LeaderStart = null;
-        [SerializeField]
         private ISquadFormation Formation =
             null;
         private List<AIAgent> Agents = new();
         private Vector3 Target;
         [SerializeField]
-        private Transform SquadLeader;
-        private ISquadLeader SquadLeaderComp;
+        private Transform Leader;
+        public ISquadLeader LeaderComp { get; private set; }
 
         [SerializeField]
         private float DistanceToMove = 5f;
@@ -47,21 +46,18 @@ namespace Squad
 
         private void Awake()
         {
-            if (!SquadLeader)
-                SquadLeader = FindAnyObjectByType<PlayerAgent>().transform;
-            SquadLeaderComp = SquadLeader.GetComponent<ISquadLeader>();
-            Target = SquadLeader.position;
+            if (!Leader)
+                Leader = FindAnyObjectByType<PlayerAgent>().transform;
+            LeaderComp = Leader.GetComponent<ISquadLeader>();
+            Target = Leader.position;
         }
         // Start is called before the first frame update
         void Start()
         {
-            transform.position = LeaderStart.position;
-            SquadLeaderComp.OnMoving += HandleMovingLeader;
-            SquadLeaderComp.OnShooting += HandleShootingLeader;
-            SquadLeaderComp.OnDamageTaken += HandleDamageTakenLeader;
-            SquadLeaderComp.OnCriticalHP += HandleCriticalHPLeader;
+            transform.position = Leader.position;
+            InitLeaderEvents();
 
-            Target = LeaderStart.transform.position;
+            Target = Leader.transform.position;
             for (uint i = 0; i < numberOfAIAgents; i++)
             {
                 GameObject unitInst = InstantiateAAIAgent();
@@ -71,17 +67,22 @@ namespace Squad
         }
         private void OnDestroy()
         {
-            SquadLeaderComp.OnMoving -= HandleMovingLeader;
-            SquadLeaderComp.OnShooting -= HandleShootingLeader;
-            SquadLeaderComp.OnDamageTaken -= HandleDamageTakenLeader;
-            SquadLeaderComp.OnCriticalHP -= HandleCriticalHPLeader;
+            UnInitLeaderEvents();
+            Leader = null;
+            LeaderComp = null;
         }
 
         GameObject InstantiateAAIAgent()
         {
+            if (!AIAgentPrefab)
+            {
+                print("NO AGENT PREFAB");
+                return null;
+            }
             GameObject unitInst = Instantiate(AIAgentPrefab, transform, false);
             AIAgent unit = unitInst.GetComponent<AIAgent>();
             Agents.Add(unitInst.GetComponent<AIAgent>());
+            unit.OnAIDeath += RemoveAIAgent;
 
             RaycastHit raycastInfo;
             Ray ray = new Ray(unitInst.transform.position, Vector3.down);
@@ -90,8 +91,15 @@ namespace Squad
                 unitInst.transform.position = raycastInfo.point;
             }
 
-            return unitInst;
+            return unitInst as GameObject;
         }
+        public void RemoveAIAgent(AIAgent agent)
+        {
+            agent.OnAIDeath -= RemoveAIAgent;
+            Agents.Remove(agent);
+        }
+
+
         //Update the squad size as well
         public void SpawnAAIAgent()
         {
@@ -101,7 +109,7 @@ namespace Squad
         }
         public void SetTargetPos(Vector3 newTarget)
         {
-            Vector3 direction = SquadLeader.forward;
+            Vector3 direction = Leader.forward;
             Target = newTarget;
             Barycenter = ComputeBarycenter();
             float angle = Mathf.Atan2(direction.x, direction.z);
@@ -151,7 +159,8 @@ namespace Squad
                 int maxPriority = 0;
                 foreach (AIAgent agent in Agents)
                 {
-                    if (Vector3.SqrMagnitude(agent.transform.position - SquadLeader.position) > MinDistanceToProtect * MinDistanceToProtect)
+                    if (Vector3.SqrMagnitude(agent.transform.position - Leader.position) > MinDistanceToProtect * MinDistanceToProtect
+                        || agent == Healer)
                         break;
                     // if(maxPriority < agent. /*agent.ProtectPriority*/)
                     //    {
@@ -161,7 +170,7 @@ namespace Squad
                 }
 
                 Protector = bestProtector;
-                if (!Protector || IsBarrageMode)
+                if (!Protector)
                     return;
                 //ELSE
                 {
@@ -183,7 +192,8 @@ namespace Squad
 
                 foreach (AIAgent agent in Agents)
                 {
-                    if (Vector3.SqrMagnitude(agent.transform.position - SquadLeader.position) > MinDistanceToHeal * MinDistanceToHeal)
+                    if (Vector3.SqrMagnitude(agent.transform.position - Leader.position) > MinDistanceToHeal * MinDistanceToHeal
+                        || agent == Protector)
                         break;
                     //if(maxPriority < agent. /*agent.HealPriority*/)
                     //{
@@ -201,6 +211,24 @@ namespace Squad
                     StartCoroutine(EndingStateCoroutine(Healer.gameObject.GetComponentInChildren<AIAgentFSM>(), AIAgentFSM.AIState.HEAL, () => Healer = null));
                 }
             }
+        }
+        void HandleDeathLeader()
+        {
+            UnInitLeaderEvents();
+            int i = 0;
+            while (LeaderComp == null || LeaderComp.CheckDeath() && i < Agents.Count)
+            {
+                Leader = Agents[i].transform;
+                LeaderComp = Leader.GetComponent<ISquadLeader>();
+                if (!LeaderComp.CheckDeath())
+                    break;
+                i++;
+            }
+            foreach (AIAgent agent in Agents)
+            {
+                ChangeState(agent, AIAgentFSM.AIState.IDLE);
+            }
+            InitLeaderEvents();
         }
         public void OrderBarrageFire(Vector3 target)
         {
@@ -228,6 +256,22 @@ namespace Squad
                 result += agent.transform.position;
             result /= Agents.Count;
             return result;
+        }
+        void InitLeaderEvents()
+        {
+            LeaderComp.OnMoving += HandleMovingLeader;
+            LeaderComp.OnShooting += HandleShootingLeader;
+            LeaderComp.OnDamageTaken += HandleDamageTakenLeader;
+            LeaderComp.OnCriticalHP += HandleCriticalHPLeader;
+            LeaderComp.OnDeath += HandleDeathLeader;
+        }
+        void UnInitLeaderEvents()
+        {
+            LeaderComp.OnMoving -= HandleMovingLeader;
+            LeaderComp.OnShooting -= HandleShootingLeader;
+            LeaderComp.OnDamageTaken -= HandleDamageTakenLeader;
+            LeaderComp.OnCriticalHP -= HandleCriticalHPLeader;
+            LeaderComp.OnDeath -= HandleDeathLeader;
         }
     }
 }

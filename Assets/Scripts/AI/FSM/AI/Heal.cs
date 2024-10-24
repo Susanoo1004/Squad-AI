@@ -21,9 +21,16 @@ namespace FSM
             Transform Player;
             SquadController SquadController;
 
+            [SerializeField]
             private float mHealTimer;
+            [SerializeField]
+            private uint mHealAmount = 1;
+            [SerializeField]
             private float mHealDelay = 0.2f;
+            [SerializeField]
             private float mHealRadius = 2.5f;
+            [SerializeField]
+            private float mRadiusToleranceRatio = 0.8f;
 
             public Heal() : base(HEAL)
             { }
@@ -44,12 +51,13 @@ namespace FSM
             public override void EnterState()
             {
                 NextState = HEAL;
-                AIAgent.GetComponent<Material>().color = Color.green;
+                AIAgent.SetMaterial(Color.green);
             }
 
             public override void ExitState()
             {
                 SquadController.Healer = null;
+                AIAgent.SetDefaultMaterial();
             }
             public override AIAgentFSM.AIState GetNextSate()
             {
@@ -73,18 +81,18 @@ namespace FSM
                 Vector3 v = AIAgent.transform.position - Player.position;
                 if (v.magnitude > mHealRadius)
                 {
-                    AIAgent.MoveTo(Player.position + v.normalized * mHealRadius * 0.8f);
+                    AIAgent.MoveTo(Player.position + v.normalized * mHealRadius * mRadiusToleranceRatio);
                 }
                 else
                 {
-                    
+
                     mHealTimer -= AIAgentFSM.AIStateUpdateDeltaTime;// UpdateState DeltaTime 
 
                     if (mHealTimer < 0)
                     {
                         mHealTimer = mHealDelay;
 
-                        if (!Player.GetComponent<PlayerAgent>().Heal(1))
+                        if (!Player.GetComponent<PlayerAgent>().Heal((int)mHealAmount))
                             NextState = IDLE;
                     }
                 }

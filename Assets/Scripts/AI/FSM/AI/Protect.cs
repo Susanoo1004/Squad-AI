@@ -30,7 +30,7 @@ namespace FSM
                 AIAgent = transform.parent.parent.GetComponent<AIAgent>();
                 Player = FindAnyObjectByType<PlayerAgent>().transform;
                 Inputs = FindAnyObjectByType<SimpleController>();
-                AIAgent.OnDeath += HandleDeath;
+                AIAgent.OnAIDeath += HandleDeath;
             }
             private void Start()
             {
@@ -38,7 +38,7 @@ namespace FSM
             }
             private void OnDestroy()
             {
-                AIAgent.OnDeath -= HandleDeath;
+                AIAgent.OnAIDeath -= HandleDeath;
             }
             public override void EnterState()
             {
@@ -52,6 +52,7 @@ namespace FSM
                     NextState = PROTECT;
                 AddProtector(); //Not necessary, safety purpose
                 AIAgent.MoveTo(Player.position + (Enemy.position - Player.position).normalized * Distance);
+                AIAgent.SetMaterial(Color.blue);
             }
 
             public override void ExitState()
@@ -61,6 +62,7 @@ namespace FSM
 
                 AIAgent.RegisteredEnemy = null;
                 AIAgent.StopMove();
+                AIAgent.SetDefaultMaterial();
             }
             public override AIAgentFSM.AIState GetNextSate()
             {
@@ -112,7 +114,7 @@ namespace FSM
             {
                 SquadController.Protector = null;
             }
-            void HandleDeath()
+            void HandleDeath(AIAgent agent)
             {
                 RemoveProtector();
             }

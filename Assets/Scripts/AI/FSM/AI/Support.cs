@@ -22,11 +22,12 @@ namespace FSM
             {
                 NextState = IDLE;
                 AIAgent.ShootToPosition(AIAgent.ShootingTarget);
+                AIAgent.SetMaterial(Color.black);
             }
 
             public override void ExitState()
             {
-
+                AIAgent.SetDefaultMaterial();
             }
 
             public override AIAgentFSM.AIState GetNextSate()
