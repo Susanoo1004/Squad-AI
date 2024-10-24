@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-interface IDamageable
+public interface IDamageable
 {
     void AddDamage(int damage, GameObject source);
 }

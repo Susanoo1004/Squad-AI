@@ -1899,9 +1899,10 @@ MonoBehaviour:
   AIAgentPrefab: {fileID: 7698556042702200219, guid: afe0ca0e90dc4e94989f948611cc121a,
     type: 3}
   numberOfAIAgents: 4
-  PlayerStart: {fileID: 1875079898}
+  MinDistanceToProtect: 7
+  MinDistanceToHeal: 10
   Formation: {fileID: 1540582464}
-  SquadLeader: {fileID: 0}
+  Leader: {fileID: 0}
   DistanceToMove: 3
   DistanceFromTarget: 3
   Protector: {fileID: 0}
@@ -2310,8 +2311,8 @@ Transform:
   m_GameObject: {fileID: 1831949515}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.08, y: 0.56, z: 17.03}
-  m_LocalScale: {x: 8.749542, y: 1, z: 1.4611}
+  m_LocalPosition: {x: 2.08, y: 1, z: 17.03}
+  m_LocalScale: {x: 8.749542, y: 2, z: 1.4611}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 781793720}
@@ -2611,7 +2612,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8aabe4fab0c81e74e97c00ca4ec9725f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxHP: 100
+  MaxHP: 21
   CriticalHP: 20
   BulletPower: 100
   BulletPrefab: {fileID: 2180669255350586930, guid: 1539376290df9a54e8404edc666e8d53,
@@ -2738,8 +2739,8 @@ Transform:
   m_GameObject: {fileID: 1919374326}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.41603482, z: -0, w: 0.9093487}
-  m_LocalPosition: {x: 16.69, y: 0.56, z: 17}
-  m_LocalScale: {x: 8.749542, y: 1, z: 1.4611001}
+  m_LocalPosition: {x: 16.69, y: 1, z: 17}
+  m_LocalScale: {x: 8.749542, y: 2, z: 1.4611001}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 781793720}
@@ -2899,8 +2900,8 @@ Transform:
   m_GameObject: {fileID: 1976609123}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.96281177, z: -0, w: 0.27017325}
-  m_LocalPosition: {x: 18.39, y: 0.5, z: -11.49}
-  m_LocalScale: {x: 8.749542, y: 1, z: 1.4611}
+  m_LocalPosition: {x: 18.39, y: 1, z: -11.49}
+  m_LocalScale: {x: 8.749542, y: 2, z: 1.4611}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 781793720}
@@ -3046,8 +3047,8 @@ Transform:
   m_GameObject: {fileID: 2027955600}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.7449394, z: -0, w: 0.6671322}
-  m_LocalPosition: {x: -25.36, y: 0.56, z: -1.73}
-  m_LocalScale: {x: 8.749542, y: 1, z: 1.4611}
+  m_LocalPosition: {x: -25.36, y: 1, z: -1.73}
+  m_LocalScale: {x: 8.749542, y: 2, z: 1.4611}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 781793720}

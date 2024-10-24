@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Runtime.InteropServices.WindowsRuntime;
 using TreeEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -42,6 +43,8 @@ public class PlayerAgent : MonoBehaviour, ISquadLeader
     public event Action<int> OnCriticalHP;
     public event Action<Vector3> OnMoving;
     public event Action<Vector3> OnShooting;
+    public event Action OnDeath;
+    public bool CheckDeath() { return IsDead; }
 
     #region Actions
 
@@ -111,7 +114,10 @@ public class PlayerAgent : MonoBehaviour, ISquadLeader
         if (CurrentHP <= 0)
         {
             IsDead = true;
+            OnDeath?.Invoke();
             CurrentHP = 0;
+            gameObject.SetActive(false);
+            return;
         }
         else if (CurrentHP < CriticalHP)
         {

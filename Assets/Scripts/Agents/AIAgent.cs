@@ -8,11 +8,13 @@ using UnityEngine.UI;
 
 namespace FSMMono
 {
-    public class AIAgent : MonoBehaviour, IDamageable
+    public class AIAgent : MonoBehaviour, ISquadLeader
     {
 
         [SerializeField]
-        int MaxHP = 100;
+        int MaxHP = 100; 
+        [SerializeField]
+        int CriticalHP = 20;
         [SerializeField]
         float BulletPower = 1000f;
         [SerializeField]
@@ -29,13 +31,19 @@ namespace FSMMono
         public bool IsRecharging { get; private set; } = false;
         [SerializeField]
         float RechargeDuration = 1f;
-        bool IsDead = false;
+        bool IsDead = false; //Debug purposes
         int CurrentHP;
 
-        private void SetMaterial(Color col)
+        Color DefaultColor;
+        public void SetMaterial(Color col)
         {
             MaterialInst.color = col;
         }
+        public Color GetMaterialColor()
+        {
+            return MaterialInst.color;
+        }
+        public void SetDefaultMaterial() { SetMaterial(DefaultColor); }
         public void SetWhiteMaterial() { SetMaterial(Color.white); }
         public void SetRedMaterial() { SetMaterial(Color.red); }
         public void SetBlueMaterial() { SetMaterial(Color.blue); }
@@ -55,11 +63,11 @@ namespace FSMMono
         {
             CurrentHP = MaxHP;
 
-
             NavMeshAgentInst = GetComponent<NavMeshAgent>();
 
             Renderer rend = transform.Find("Body").GetComponent<Renderer>();
             MaterialInst = rend.material;
+            DefaultColor = GetMaterialColor();
 
             GunTransform = transform.Find("Body/Gun");
             if (GunTransform == null)
@@ -70,9 +78,6 @@ namespace FSMMono
                 HPSlider.maxValue = MaxHP;
                 HPSlider.value = CurrentHP;
             }
-
-
-            //NavMeshAgentInst.updatePosition = false;
         }
 
         private void Update()
@@ -123,6 +128,7 @@ namespace FSMMono
         }
         public void MoveTo(Vector3 dest)
         {
+            OnMoving?.Invoke(dest);
             NavMeshAgentInst.isStopped = false;
             NavMeshAgentInst.SetDestination(dest);
         }
@@ -175,18 +181,33 @@ namespace FSMMono
         #endregion
 
         #region ActionMethods
+        public event Action<AIAgent> OnAIDeath;
         public event Action OnDeath;
+        public event Action<GameObject> OnDamageTaken;
+        public event Action<int> OnCriticalHP;
+        public event Action<Vector3> OnMoving;
+        public event Action<Vector3> OnShooting;
+        public bool CheckDeath() { return IsDead; }
+
 
         public void AddDamage(int amount, GameObject source)
         {
             CurrentHP -= amount;
             if (CurrentHP <= 0)
             {
+                OnAIDeath?.Invoke(this);
                 OnDeath?.Invoke();
                 IsDead = true;
                 CurrentHP = 0;
             }
-
+            else
+            {
+                OnDamageTaken?.Invoke(source);
+                if (CurrentHP < CriticalHP)
+                {
+                    OnCriticalHP?.Invoke(CurrentHP);
+                }
+            }
             if (HPSlider != null)
             {
                 HPSlider.value = CurrentHP;
@@ -200,6 +221,7 @@ namespace FSMMono
             // instantiate bullet
             if (BulletPrefab && !IsRecharging)
             {
+                OnShooting?.Invoke(pos);
                 transform.LookAt(pos + Vector3.up * transform.position.y);
                 StartCoroutine(RechargeCoroutine());
                 GameObject bullet = Instantiate<GameObject>(BulletPrefab, GunTransform.position + GunTransform.forward * 0.5f, Quaternion.identity);
@@ -252,7 +274,6 @@ namespace FSMMono
 
         public void FixedUpdate()
         {
-            //NavMeshAgentInst.SetDestination(MoveTarget);
         }
         #endregion
     }
