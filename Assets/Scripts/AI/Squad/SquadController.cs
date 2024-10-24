@@ -84,6 +84,12 @@ namespace Squad
             Agents.Add(unitInst.GetComponent<AIAgent>());
             unit.OnAIDeath += RemoveAIAgent;
 
+            if (Agents.Count < 2 || Agents.Count % 5 == 0)
+                unit.Role = AIAgent.AgentRole.Medic;
+            else if (Agents.Count % 3 == 0)
+                unit.Role = AIAgent.AgentRole.Tank;
+            //Default is Attacker
+
             RaycastHit raycastInfo;
             Ray ray = new Ray(unitInst.transform.position, Vector3.down);
             if (Physics.Raycast(ray, out raycastInfo, 10f, 1 << LayerMask.NameToLayer("Floor")))
@@ -156,17 +162,23 @@ namespace Squad
             else
             {
                 AIAgent bestProtector = null;
-                int maxPriority = 0;
+                float maxPriority = 0f;
                 foreach (AIAgent agent in Agents)
                 {
                     if (Vector3.SqrMagnitude(agent.transform.position - Leader.position) > MinDistanceToProtect * MinDistanceToProtect
                         || agent == Healer)
                         break;
-                    // if(maxPriority < agent. /*agent.ProtectPriority*/)
-                    //    {
-                    //    maxPriority = agent. /*agent.ProtectPriority*/
-                    bestProtector = agent;
-                    //    }
+                    float priority = Vector3.Magnitude(agent.transform.position - Leader.position) - MinDistanceToProtect;
+                    //ratio
+                    priority /= MinDistanceToProtect;
+                    if (agent.Role == AIAgent.AgentRole.Tank)
+                        priority += 1f;
+
+                    if (maxPriority < priority)
+                    {
+                        maxPriority = priority;
+                        bestProtector = agent;
+                    }
                 }
 
                 Protector = bestProtector;
@@ -188,17 +200,24 @@ namespace Squad
             else
             {
                 AIAgent bestHealer = null;
-                int maxPriority = 0;
+                float maxPriority = 0f;
 
                 foreach (AIAgent agent in Agents)
                 {
                     if (Vector3.SqrMagnitude(agent.transform.position - Leader.position) > MinDistanceToHeal * MinDistanceToHeal
                         || agent == Protector)
                         break;
-                    //if(maxPriority < agent. /*agent.HealPriority*/)
-                    //{
-                    //   maxPriority = agent. /*agent.HealPriority*/
-                    //}
+
+                    float priority = Vector3.Magnitude(agent.transform.position - Leader.position) - MinDistanceToHeal;
+                    //ratio
+                    priority /= MinDistanceToHeal;
+                    if (agent.Role == AIAgent.AgentRole.Medic)
+                        priority += 1f;
+
+                    if (maxPriority < priority)
+                    {
+                        maxPriority = priority;
+                    }
                     bestHealer = agent;
                 }
 

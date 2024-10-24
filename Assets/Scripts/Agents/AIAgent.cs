@@ -23,6 +23,13 @@ namespace FSMMono
         [SerializeField]
         Slider HPSlider = null;
 
+        public enum AgentRole
+        {
+            Attacker,
+            Medic,
+            Tank
+        }
+        public AgentRole Role = AgentRole.Attacker;
 
         Transform GunTransform;
         NavMeshAgent NavMeshAgentInst;
