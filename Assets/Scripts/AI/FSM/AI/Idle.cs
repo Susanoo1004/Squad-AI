@@ -46,7 +46,10 @@ namespace FSM
             {
                 base.EnterState();
                 AIAgent.StopMove();
-
+                if (!AIAgent.HasReachedPos())
+                {
+                    NextState = FOLLOW;
+                }
             }
 
             public override void ExitState()

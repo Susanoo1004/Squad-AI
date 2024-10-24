@@ -1558,7 +1558,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.16666667
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 0}
+  m_NavMeshData: {fileID: 23800000, guid: 126d971a843a5924d8c4a6685573cdc1, type: 2}
   m_BuildHeightMesh: 0
 --- !u!4 &711308077
 Transform:
@@ -3186,7 +3186,7 @@ MonoBehaviour:
   Formation: {fileID: 1540582464}
   Leader: {fileID: 0}
   DistanceToMove: 3
-  DistanceFromTarget: 3
+  DistanceFromTarget: 2
   Protector: {fileID: 0}
   Healer: {fileID: 0}
 --- !u!4 &1540582466
@@ -4054,8 +4054,7 @@ MonoBehaviour:
     type: 3}
   HPSlider: {fileID: 1549369261}
   FiringRate: 0.2
-  DeathExplosion: {fileID: 1828176872806910, guid: 64891a0eb28db934898420d80ca07cb3,
-    type: 3}
+  DeathExplosion: {fileID: 0}
 --- !u!208 &1875079902
 NavMeshObstacle:
   m_ObjectHideFlags: 0

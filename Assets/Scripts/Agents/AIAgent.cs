@@ -114,7 +114,7 @@ namespace FSMMono
             RaycastHit hit;
 
             // Perform the raycast and check if it hits an enemy
-            return Physics.Raycast(ray, out hit, RangeOfSight, LayerMask.NameToLayer("Enemies") | LayerMask.NameToLayer("Allies") & ~gameObject.layer);
+            return Physics.Raycast(ray, out hit, RangeOfSight, LayerMask.NameToLayer("Enemies") + LayerMask.NameToLayer("Allies") - gameObject.layer);
         }
         public bool IsEnemyAimable(Vector3 enemyPosition)
         {
@@ -123,7 +123,7 @@ namespace FSMMono
             RaycastHit hit;
 
             // Perform the raycast and check if it hits an enemy
-            return Physics.Raycast(ray, out hit, RangeOfSight, LayerMask.NameToLayer("Enemies") | LayerMask.NameToLayer("Allies") & ~gameObject.layer);
+            return Physics.Raycast(ray, out hit, RangeOfSight, LayerMask.NameToLayer("Enemies") + LayerMask.NameToLayer("Allies") - gameObject.layer);
         }
 
         #endregion

@@ -162,14 +162,15 @@ public class TurretAgent : MonoBehaviour, IDamageable
         RaycastHit hit;
 
         // Perform the raycast and check if it hits an enemy
-        return Physics.Raycast(ray, out hit, RangeOfSight, LayerMask.NameToLayer("Enemies") | LayerMask.NameToLayer("Allies") & ~gameObject.layer);
+        return Physics.Raycast(ray, out hit, RangeOfSight, LayerMask.NameToLayer("Enemies") + LayerMask.NameToLayer("Allies") - gameObject.layer);
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (Target == null && other.gameObject.layer == (LayerMask.NameToLayer("Enemies") | LayerMask.NameToLayer("Allies") & ~gameObject.layer))
+        LayerMask TargetLayer = LayerMask.NameToLayer("Enemies") + LayerMask.NameToLayer("Allies") - gameObject.layer;
+        if (Target == null && other.gameObject.layer == TargetLayer)
         {
-            if(IsEnemyAimable(Target.transform.position))
-            Target = other.gameObject;
+            if (IsEnemyAimable(other.transform.position))
+                Target = other.gameObject;
         }
     }
     private void OnTriggerExit(Collider other)
@@ -183,9 +184,9 @@ public class TurretAgent : MonoBehaviour, IDamageable
     {
         if (Target)
             return;
-        if (other.gameObject.layer ==( LayerMask.NameToLayer("Enemies") | LayerMask.NameToLayer("Allies") & ~gameObject.layer))
+        if (other.gameObject.layer == LayerMask.NameToLayer("Enemies") + LayerMask.NameToLayer("Allies") - gameObject.layer)
         {
-            if (IsEnemyAimable(Target.transform.position))
+            if (IsEnemyAimable(other.transform.position))
                 Target = other.gameObject;
         }
     }
