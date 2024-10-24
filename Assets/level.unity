@@ -3145,6 +3145,7 @@ GameObject:
   - component: {fileID: 1540582466}
   - component: {fileID: 1540582465}
   - component: {fileID: 1540582464}
+  - component: {fileID: 1540582467}
   m_Layer: 0
   m_Name: SquadController(Allies)
   m_TagString: Untagged
@@ -3183,7 +3184,7 @@ MonoBehaviour:
   numberOfAIAgents: 4
   MinDistanceToProtect: 10
   MinDistanceToHeal: 15
-  Formation: {fileID: 1540582464}
+  Formation: {fileID: 1540582467}
   Leader: {fileID: 0}
   DistanceToMove: 3
   DistanceFromTarget: 2
@@ -3204,6 +3205,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1540582467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1540582463}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d569aa4ec6d22d94aaa8130b76798e94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minRadius: 1
+  unitSize: 2
 --- !u!1 &1549369260
 GameObject:
   m_ObjectHideFlags: 0
