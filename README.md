@@ -13,7 +13,8 @@
   - [Heal Player](#heal-player)
   - [Barrage Fire](#barrage-fire)
 - [How to launch the project](#how-to-launch-the-project)
-- [How we did thi](#how-we-did-this)
+- [Controls](#controls)
+- [How we did this](#how-we-did-this)
   - [Finite State Machine](#finite-state-machine)
   - [Squad Controller](#squad-controller)
       -[Formations](#formations)
@@ -61,9 +62,14 @@ If the player decides to right-click this will activate the barrage f
 
 First, download the project either from this repository or from another source. Then open the project with Unity Hub with the Unity Version 2022.3.47. Once this is done, open the "level" scene , and then play start.
 
+#Controls
+Arrows or ZQSD to move. Left click to shoot, right-click to order/cancel the BARRAGE fire.
+
 # How we did this
 
 ## Finite State Machine 
+
+Each Agent has its own FSM as a child, the states are children of the FSM.
 
 It has been made very modulable, even though the transitions have to be set in code directly. It is templated on an enum EState that regroups every possible state. Each state is part of this enum.
 The state is responsible for its own Exit, with the next State. It executes code at Enter, Update, and Exit and can also use a trigger for detection.
