@@ -159,6 +159,10 @@ MonoBehaviour:
   ShootFrequency: 1
   CurrentHP: 0
   HPSlider: {fileID: 3993551110987992713}
+  DamageExplosion: {fileID: 1892351807075712, guid: 44be68b4fc4366142a9cd1ae1f761ea4,
+    type: 3}
+  DeathExplosion: {fileID: 1828176872806910, guid: 64891a0eb28db934898420d80ca07cb3,
+    type: 3}
 --- !u!1 &49960627115765623
 GameObject:
   m_ObjectHideFlags: 0
